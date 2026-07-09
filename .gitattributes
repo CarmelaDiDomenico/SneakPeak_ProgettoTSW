@@ -1,2 +1,18 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Forza esplicitamente alcuni formati come testo
+*.java text
+*.html text
+*.css text
+*.js text
+*.sql text
+*.xml text
+*.jsp text
+
+# Dichiara esplicitamente i file binari
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
