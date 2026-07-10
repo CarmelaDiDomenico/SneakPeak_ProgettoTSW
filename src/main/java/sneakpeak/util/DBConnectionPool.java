@@ -19,7 +19,7 @@ public class DBConnectionPool {
     // Stringa di connessione JDBC per MySQL con fuso orario UTC configurato
     private static final String DB_URL = "jdbc:mysql://localhost:3306/sneakpeak?serverTimezone=UTC";
     private static final String DB_USER = "root";       
-    private static final String DB_PASSWORD = "Password1";   
+    private static final String DB_PASSWORD = "";   
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Il blocco statico viene eseguito una sola volta quando la classe viene caricata in memoria
