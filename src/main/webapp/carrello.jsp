@@ -150,7 +150,7 @@
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <span class="item-price">€ <%= String.format("%.2f", p.getPrezzo()) %></span>
-                                    <a href="#" class="btn-remove">Rimuovi</a>
+                                    <a href="rimuoviCarrello?id=<%= p.getIdProdotto() %>" class="btn-remove">Rimuovi</a>
                                 </div>
                             </div>
                     <%
