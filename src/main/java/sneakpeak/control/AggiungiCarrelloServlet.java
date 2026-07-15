@@ -31,12 +31,10 @@ public class AggiungiCarrelloServlet extends HttpServlet {
                 Prodotto prodotto = dao.doRetrieveById(idProdotto);
                 
                 if (prodotto != null) {
-                    // 3. RECUPERO DELLA SESSIONE
-                    // getSession(true) dice a Tomcat: "Dammi la sessione di questo utente. 
-                    // Se è la prima volta che visita il sito e non ce l'ha, creala subito".
+                    // 3. Recupero della sessione
                     HttpSession session = request.getSession(true);
                     
-                    // 4. Estraiamo l'oggetto carrello dalla sessione usando la sua etichetta
+                    // 4. Estraiamo l'oggetto carrello dalla sessione
                     Carrello carrello = (Carrello) session.getAttribute("carrello");
                     
                     // Se l'utente non ha mai aggiunto nulla, l'oggetto non esiste (è null). Lo creiamo noi.
@@ -54,11 +52,10 @@ public class AggiungiCarrelloServlet extends HttpServlet {
             }
         }
         
-        // 6. Azione completata! Mandiamo l'utente direttamente alla pagina visiva del carrello
         response.sendRedirect("carrello.jsp");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response); // Trattiamo le richieste GET allo stesso modo
+        doPost(request, response);
     }
 }

@@ -2,14 +2,10 @@ package sneakpeak.model;
 
 import java.io.Serializable;
 
-/**
- * Questo Java Bean rappresenta la tabella PRODOTTO del database.
- * Ogni oggetto di questa classe conterrà i dati di una singola sneaker.
- */
 public class Prodotto implements Serializable {
-    private static final long serialVersionUID = 1L; // Necessario per l'interfaccia Serializable
+    private static final long serialVersionUID = 1L; 
 
-    // Variabili di istanza che rispecchiano le colonne della tabella nel Database
+    // Variabili di istanza
     private int idProdotto;
     private String nome;
     private String descrizione;
@@ -18,11 +14,11 @@ public class Prodotto implements Serializable {
     private int isDeleted;
     private int idCategoria;
 
-    // 1. Costruttore vuoto di default (Obbligatorio per i Java Bean)
+    // Costruttore vuoto di default
     public Prodotto() {
     }
 
-    // 2. Metodi Getter (per leggere i dati) e Setter (per scriverci dentro)
+    // Metodi Getter e Setter
 
     public int getIdProdotto() {
         return idProdotto;

@@ -30,7 +30,7 @@ public class ProdottoDettaglioServlet extends HttpServlet {
                 ProdottoDAO dao = new ProdottoDAO();
                 Prodotto prodotto = dao.doRetrieveById(idProdotto);
                 
-                // 4. Mettiamo il prodotto trovato nella "valigia" (request) per mandarlo alla JSP
+                // 4. Mettiamo il prodotto trovato nella request per mandarlo alla JSP
                 request.setAttribute("prodottoSingolo", prodotto);
                 
             } catch (NumberFormatException e) {

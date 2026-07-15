@@ -25,12 +25,13 @@ INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, id_categoria) VALUES
 -- ==========================================
 -- 3. POPOLAZIONE TABELLA UTENTE
 -- ==========================================
--- NOTA SULLA PASSWORD: Nel database reale, le password non vanno MAI salvate in chiaro 
--- (come 'admin123'). Più avanti nel progetto Java useremo una funzione per cifrarle (es. SHA-256).
--- Per ora, ai fini del test, le inseriamo testuali.
+-- NOTA SULLA PASSWORD: Le password nel database reale vanno salvate cifrate in SHA-256.
+-- Le password in chiaro di test corrispondenti sono:
+-- 'admin@sneakpeak.it' -> 'admin123'
+-- 'mario.rossi@email.it' -> 'cliente123'
 INSERT INTO UTENTE (email, password, nome, cognome, tipo) VALUES 
-('admin@sneakpeak.it', 'admin123', 'Salvatore', 'Valente', 'ADMIN'),
-('mario.rossi@email.it', 'cliente123', 'Mario', 'Rossi', 'CLIENTE');
+('admin@sneakpeak.it', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Salvatore', 'Valente', 'ADMIN'),
+('mario.rossi@email.it', '09a31a7001e261ab1e056182a71d3cf57f582ca9a29cff5eb83be0f0549730a9', 'Mario', 'Rossi', 'CLIENTE');
 
 -- ==========================================
 -- 4. POPOLAZIONE TABELLA INDIRIZZO (Opzionale)

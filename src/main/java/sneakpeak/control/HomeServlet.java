@@ -15,7 +15,7 @@ import sneakpeak.model.ProdottoDAO;
 
 /**
  * Questa Servlet intercetta le richieste dirette alla Home Page ("/home").
- * Fa da "vigile urbano": prende i dati dal Model (Database) e li manda alla View (JSP).
+ * Prende i dati dal Model (Database) e li manda alla View (JSP).
  */
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
