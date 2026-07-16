@@ -168,7 +168,8 @@
                         <span>€ <%= String.format("%.2f", carrello.getPrezzoTotale()) %></span>
                     </div>
                     
-                    <a href="#" class="btn-checkout">Procedi all'acquisto</a>
+                    <a href="checkout" class="btn-checkout" style="display: block; text-align: center; background-color: #000; color: #fff; padding: 15px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+    Procedi all'acquisto</a>
                 </div>
         <%
             }
