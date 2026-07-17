@@ -82,4 +82,17 @@ public class Prodotto implements Serializable {
     
     public void setImmagine(String immagine) 
     { this.immagine = immagine; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Prodotto other = (Prodotto) obj;
+        return idProdotto == other.idProdotto;
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(idProdotto);
+    }
 }

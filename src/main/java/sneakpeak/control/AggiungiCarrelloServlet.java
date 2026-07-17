@@ -46,6 +46,7 @@ public class AggiungiCarrelloServlet extends HttpServlet {
                     
                     // 5. Inseriamo la scarpa nel carrello
                     carrello.addProdotto(prodotto);
+                    session.setAttribute("messaggioSuccesso", "Prodotto aggiunto al carrello con successo!");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Errore formato ID nel carrello: " + e.getMessage());

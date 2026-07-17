@@ -18,12 +18,50 @@ public class Carrello implements Serializable {
         articoli.add(p);
     }
 
-    // Rimozione di una scarpa dal carrello tramite ID
+    // Rimozione di tutte le occorrenze di una scarpa dal carrello tramite ID
     public void removeProdotto(int idProdotto) {
-        for (int i = 0; i < articoli.size(); i++) {
-            if (articoli.get(i).getIdProdotto() == idProdotto) {
-                articoli.remove(i);
-                break;
+        articoli.removeIf(p -> p.getIdProdotto() == idProdotto);
+    }
+
+    // Aggiornamento della quantità di un prodotto nel carrello
+    public void updateQuantita(int idProdotto, int nuovaQuantita) {
+        if (nuovaQuantita <= 0) {
+            removeProdotto(idProdotto);
+            return;
+        }
+
+        // Calcoliamo la quantità attuale
+        int qtyAttuale = 0;
+        Prodotto protRef = null;
+        for (Prodotto p : articoli) {
+            if (p.getIdProdotto() == idProdotto) {
+                qtyAttuale++;
+                protRef = p;
+            }
+        }
+
+        if (protRef == null) {
+            return; // Il prodotto non è presente nel carrello
+        }
+
+        if (nuovaQuantita > qtyAttuale) {
+            // Aggiungiamo la differenza
+            int daAggiungere = nuovaQuantita - qtyAttuale;
+            for (int i = 0; i < daAggiungere; i++) {
+                articoli.add(protRef);
+            }
+        } else if (nuovaQuantita < qtyAttuale) {
+            // Rimuoviamo la differenza
+            int daRimuovere = qtyAttuale - nuovaQuantita;
+            int rimossi = 0;
+            for (int i = articoli.size() - 1; i >= 0; i--) {
+                if (articoli.get(i).getIdProdotto() == idProdotto) {
+                    articoli.remove(i);
+                    rimossi++;
+                    if (rimossi == daRimuovere) {
+                        break;
+                    }
+                }
             }
         }
     }

@@ -114,6 +114,49 @@
             background-color: #32E012;/* Quando il mouse ci passa sopra, il verde diventa leggermente più scuro */
             box-shadow: 0px 4px 10px rgba(0,0,0,0.15); /* Aggiunge un'ombra sfumata sotto il bottone, facendolo sembrare "sollevato" */
         }
+        
+        /* Pulsanti e input di quantità */
+        .btn-qty {
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            width: 30px;
+            height: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-qty:hover:not(:disabled) {
+            background-color: #39FF14;
+            color: #000;
+        }
+        .btn-qty:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .qty-input {
+            width: 45px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.05em;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        /* Rimuove freccette standard input number */
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .qty-input {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -140,8 +183,15 @@
         %>
                 <div class="cart-items-list">
                     <%
-                        // Cicliamo tutti i prodotti inseriti nel carrello e generiamo l'HTML per ciascuno
+                        // Raggruppiamo gli articoli per calcolare la quantità e preservare l'ordine d'inserimento
+                        java.util.Map<Prodotto, Integer> articoliQuantita = new java.util.LinkedHashMap<>();
                         for (Prodotto p : carrello.getArticoli()) {
+                            articoliQuantita.put(p, articoliQuantita.getOrDefault(p, 0) + 1);
+                        }
+
+                        for (java.util.Map.Entry<Prodotto, Integer> entry : articoliQuantita.entrySet()) {
+                            Prodotto p = entry.getKey();
+                            int qty = entry.getValue();
                     %>
                             <div class="cart-item-row">
                                 <div class="item-info">
@@ -149,7 +199,14 @@
                                     <p>Marca: <%= p.getMarca() %></p>
                                 </div>
                                 <div style="display:flex; align-items:center;">
-                                    <span class="item-price">€ <%= String.format("%.2f", p.getPrezzo()) %></span>
+                                    <form action="modificaCarrello" method="POST" style="display:flex; align-items:center; margin-right: 15px;">
+                                        <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
+                                        <input type="hidden" id="hidden-qty-<%= p.getIdProdotto() %>" name="quantita" value="<%= qty %>">
+                                        <button type="button" class="btn-qty" <%= (qty <= 1) ? "disabled" : "" %> onclick="submitCartQty(<%= p.getIdProdotto() %>, <%= qty - 1 %>)">-</button>
+                                        <input type="number" min="1" class="qty-input" value="<%= qty %>" onchange="submitCartQty(<%= p.getIdProdotto() %>, this.value)">
+                                        <button type="button" class="btn-qty" onclick="submitCartQty(<%= p.getIdProdotto() %>, <%= qty + 1 %>)">+</button>
+                                    </form>
+                                    <span class="item-price">€ <%= String.format("%.2f", p.getPrezzo() * qty) %></span>
                                     <a href="rimuoviCarrello?id=<%= p.getIdProdotto() %>" class="btn-remove">Rimuovi</a>
                                 </div>
                             </div>
@@ -178,5 +235,20 @@
 
     <%@ include file="footer.jsp" %>
 
+    <script>
+        function submitCartQty(id, val) {
+            var hiddenInput = document.getElementById("hidden-qty-" + id);
+            if (hiddenInput) {
+                var intVal = parseInt(val);
+                if (!isNaN(intVal) && intVal >= 1) {
+                    hiddenInput.value = intVal;
+                    hiddenInput.form.submit();
+                } else if (intVal === 0) {
+                    // Se si imposta la quantità a 0, si reindirizza alla rimozione dell'articolo
+                    window.location.href = "rimuoviCarrello?id=" + id;
+                }
+            }
+        }
+    </script>
 </body>
 </html>

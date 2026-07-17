@@ -33,6 +33,7 @@ public class RimuoviCarrelloServlet extends HttpServlet {
                 // 4. Se il carrello esiste, rimuoviamo la scarpa tramite il suo ID
                 if (carrello != null) {
                     carrello.removeProdotto(idProdotto);
+                    session.setAttribute("messaggioSuccesso", "Prodotto rimosso dal carrello.");
                 }
                 
             } catch (NumberFormatException e) {
