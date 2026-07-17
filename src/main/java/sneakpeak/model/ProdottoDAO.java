@@ -39,6 +39,7 @@ public class ProdottoDAO {
                 p.setMarca(resultSet.getString("marca"));
                 p.setIsDeleted(resultSet.getInt("is_deleted"));
                 p.setIdCategoria(resultSet.getInt("id_categoria"));
+                p.setImmagine(resultSet.getString("immagine"));
                 
                 prodotti.add(p);
             }
@@ -86,6 +87,7 @@ public class ProdottoDAO {
                 p.setMarca(resultSet.getString("marca"));
                 p.setIsDeleted(resultSet.getInt("is_deleted"));
                 p.setIdCategoria(resultSet.getInt("id_categoria"));
+                p.setImmagine(resultSet.getString("immagine"));
             }
         } catch (SQLException e) {
             System.out.println("Errore in ProdottoDAO.doRetrieveById: " + e.getMessage());
@@ -106,7 +108,7 @@ public class ProdottoDAO {
         Connection connection = null;
         PreparedStatement ps = null;
        
-        String insertSQL = "INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, id_categoria) VALUES (?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, id_categoria, immagine) VALUES (?, ?, ?, ?, ?, ?)";
         
         try {
             connection = DBConnectionPool.getConnection();
@@ -116,7 +118,8 @@ public class ProdottoDAO {
             ps.setString(2, prodotto.getDescrizione());
             ps.setDouble(3, prodotto.getPrezzo());
             ps.setString(4, prodotto.getMarca());
-            ps.setInt(5, prodotto.getIdCategoria()); 
+            ps.setInt(5, prodotto.getIdCategoria());
+            ps.setString(6, prodotto.getImmagine());
             
             int result = ps.executeUpdate();
             return (result > 0);
@@ -157,7 +160,8 @@ public class ProdottoDAO {
                 p.setPrezzo(rs.getDouble("prezzo"));
                 p.setMarca(rs.getString("marca"));
                 p.setIdCategoria(rs.getInt("id_categoria"));
-                p.setIsDeleted(rs.getInt("is_deleted")); 
+                p.setIsDeleted(rs.getInt("is_deleted"));
+                p.setImmagine(rs.getString("immagine"));
                 prodotti.add(p);
             }
         } catch (SQLException e) {

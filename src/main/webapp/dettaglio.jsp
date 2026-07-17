@@ -116,7 +116,7 @@
             <div class="product-container">
                 
                 <div class="product-image">
-                    <span style="color:#aaa;">[Immagine di <%= p.getNome() %>]</span>
+                  <img src="<%= p.getImmagine() %>" alt="<%= p.getNome() %>" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;">
                 </div>
 
                 <div class="product-info">

@@ -1,18 +1,26 @@
 package sneakpeak.control;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import sneakpeak.model.Prodotto;
 import sneakpeak.model.ProdottoDAO;
 import sneakpeak.model.Utente;
 
 @WebServlet("/aggiungiProdotto")
+// ANNOTAZIONE PER GESTIRE I FILE
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,      // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class AggiungiProdottoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +29,6 @@ public class AggiungiProdottoServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        //Controllo Sicurezza 
         HttpSession session = request.getSession();
         Utente admin = (Utente) session.getAttribute("utenteLoggato");
         
@@ -31,11 +37,10 @@ public class AggiungiProdottoServlet extends HttpServlet {
             return;
         }
 
-        //Recupero Parametri dal form
+        // Recupero parametri testo
         String nome = request.getParameter("nome");
         String marca = request.getParameter("marca");
         String descrizione = request.getParameter("descrizione");
-        
         
         double prezzo = 0;
         int idCategoria = 0;
@@ -47,20 +52,35 @@ public class AggiungiProdottoServlet extends HttpServlet {
             return;
         }
 
-        //Creazione del Bean Prodotto
+        // GESTIONE UPLOAD IMMAGINE
+        Part filePart = request.getPart("immagine"); 
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        
+        
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "img";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        
+        
+        filePart.write(uploadPath + File.separator + fileName);
+        
+        
+        String percorsoDB = "img/" + fileName;
+        
+
         Prodotto nuovoProdotto = new Prodotto();
         nuovoProdotto.setNome(nome);
         nuovoProdotto.setMarca(marca);
         nuovoProdotto.setDescrizione(descrizione);
         nuovoProdotto.setPrezzo(prezzo);
         nuovoProdotto.setIdCategoria(idCategoria); 
-        
+        nuovoProdotto.setImmagine(percorsoDB); 
 
-        // Salvataggio su Database
         ProdottoDAO dao = new ProdottoDAO();
         boolean salvato = dao.doSave(nuovoProdotto);
 
-        // 5. Reindirizzamento
         if (salvato) {
             response.sendRedirect("aggiungiProdotto.jsp?successo=true");
         } else {

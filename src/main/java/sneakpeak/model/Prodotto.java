@@ -13,6 +13,7 @@ public class Prodotto implements Serializable {
     private String marca;
     private int isDeleted;
     private int idCategoria;
+    private String immagine;
 
     // Costruttore vuoto di default
     public Prodotto() {
@@ -75,4 +76,10 @@ public class Prodotto implements Serializable {
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
     }
+    
+    public String getImmagine() 
+    { return immagine; }
+    
+    public void setImmagine(String immagine) 
+    { this.immagine = immagine; }
 }

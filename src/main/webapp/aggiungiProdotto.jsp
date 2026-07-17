@@ -31,7 +31,12 @@
             <p style="color: red; font-weight: bold; text-align: center;">❌ Errore durante l'inserimento. Riprova.</p>
         <% } %>
 
-        <form action="aggiungiProdotto" method="POST" style="margin-top: 20px;">
+        <form action="aggiungiProdotto" method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
+        
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">Foto del Prodotto:</label><br>
+                <input type="file" name="immagine" accept="image/*" required style="width: 100%; padding: 10px; margin-top: 5px; background-color: #fff; border: 1px solid #ccc;">
+           </div>
             
             <div style="margin-bottom: 15px;">
                 <label style="font-weight: bold;">Nome Modello:</label><br>
