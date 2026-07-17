@@ -9,6 +9,7 @@ public class Ordine {
     private Date dataOrdine;
     private int idIndirizzo;
     private int idPagamento;
+    private String stato;
 
     // Costruttore vuoto
     public Ordine() {}
@@ -48,4 +49,10 @@ public class Ordine {
     
     public void setIdPagamento(int idPagamento) 
     { this.idPagamento = idPagamento; }
+    
+    public String getStato() 
+    { return stato; }
+    
+    public void setStato(String stato) 
+    { this.stato = stato; }
 }

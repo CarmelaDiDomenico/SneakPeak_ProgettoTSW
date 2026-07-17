@@ -69,4 +69,11 @@
     <%
         }
     %>
+    <% 
+    sneakpeak.model.Utente uHeader = (sneakpeak.model.Utente) session.getAttribute("utenteLoggato"); 
+    if (uHeader != null && "ADMIN".equalsIgnoreCase(uHeader.getTipo())) { 
+    %>
+    <a href="adminDashboard.jsp" style="color: #d9534f; font-weight: bold;">[⚙️ Area Admin]</a>
+    <%   }
+    %>
         </div>

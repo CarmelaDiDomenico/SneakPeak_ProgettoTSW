@@ -45,7 +45,7 @@ public class OrdineDAO {
                 idNuovoOrdine = rsGeneratedKeys.getInt(1);
             }
             
-            // 4. RAGGRUPPIAMO I PRODOTTI UGUALI PER CALCOLARE LE QUANTITÀ
+            // RAGGRUPPIAMO I PRODOTTI UGUALI PER CALCOLARE LE QUANTITÀ
             Map<Integer, Integer> quantitaProdotti = new HashMap<>();
             Map<Integer, Double> prezziProdotti = new HashMap<>();
             
@@ -98,6 +98,66 @@ public class OrdineDAO {
             } catch (SQLException ex) {
                 System.out.println("Errore chiusura risorse: " + ex.getMessage());
             }
+        }
+    }
+    
+ // Recupera TUTTI gli ordini per l'Amministratore
+    public java.util.List<Ordine> doRetrieveAll() {
+        java.util.List<Ordine> ordini = new java.util.ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+     
+        String selectSQL = "SELECT * FROM ORDINE ORDER BY data_ordine DESC, id_ordine DESC";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(selectSQL);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Ordine o = new Ordine();
+                o.setIdOrdine(rs.getInt("id_ordine"));
+                o.setIdUtente(rs.getInt("id_utente"));
+                o.setTotale(rs.getDouble("totale"));
+                o.setDataOrdine(rs.getDate("data_ordine"));
+                o.setIdIndirizzo(rs.getInt("id_indirizzo"));
+                o.setIdPagamento(rs.getInt("id_pagamento"));
+                o.setStato(rs.getString("stato"));
+                ordini.add(o);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore recupero tutti gli ordini: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return ordini;
+    }
+
+    // Aggiorna lo stato di un ordine
+    public boolean updateStato(int idOrdine, String nuovoStato) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String updateSQL = "UPDATE ORDINE SET stato = ? WHERE id_ordine = ?";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(updateSQL);
+            ps.setString(1, nuovoStato);
+            ps.setInt(2, idOrdine);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Errore aggiornamento stato ordine: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
 }
