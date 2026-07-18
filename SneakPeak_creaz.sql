@@ -67,12 +67,13 @@ CREATE TABLE ORDINE (
     FOREIGN KEY (id_pagamento) REFERENCES METODO_PAGAMENTO(id_pagamento) ON DELETE SET NULL
 );
 
--- 7. Tabella Dettaglio Ordine (Integrità storica: memorizza quantità e prezzo bloccato al momento dell'acquisto)
+-- 7. Tabella Dettaglio Ordine (Integrità storica: memorizza quantità, prezzo e iva bloccati al momento dell'acquisto)
 CREATE TABLE DETTAGLIO_ORDINE (
     id_ordine INT,
     id_prodotto INT,
     quantita INT NOT NULL,
     prezzo_acquisto DECIMAL(10,2) NOT NULL, -- Prezzo di vendita in quel preciso istante
+    iva_acquisto DECIMAL(5,2) DEFAULT 22.00, -- IVA applicata al momento dell'acquisto
     PRIMARY KEY (id_ordine, id_prodotto),
     FOREIGN KEY (id_ordine) REFERENCES ORDINE(id_ordine) ON DELETE CASCADE,
     FOREIGN KEY (id_prodotto) REFERENCES PRODOTTO(id_prodotto) -- Mantiene il vincolo

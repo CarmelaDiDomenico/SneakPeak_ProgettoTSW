@@ -58,7 +58,7 @@ public class OrdineDAO {
             }
             
            
-            String insertDettaglio = "INSERT INTO DETTAGLIO_ORDINE (id_ordine, id_prodotto, quantita, prezzo_acquisto) VALUES (?, ?, ?, ?)";
+            String insertDettaglio = "INSERT INTO DETTAGLIO_ORDINE (id_ordine, id_prodotto, quantita, prezzo_acquisto, iva_acquisto) VALUES (?, ?, ?, ?, ?)";
             psDettaglio = connection.prepareStatement(insertDettaglio);
             
             for (Integer idProd : quantitaProdotti.keySet()) {
@@ -66,6 +66,7 @@ public class OrdineDAO {
                 psDettaglio.setInt(2, idProd);
                 psDettaglio.setInt(3, quantitaProdotti.get(idProd)); 
                 psDettaglio.setDouble(4, prezziProdotti.get(idProd));
+                psDettaglio.setDouble(5, 22.00); // Fissiamo l'IVA storica per l'ordine al 22% come richiesto
                 
                 psDettaglio.executeUpdate();
             }
