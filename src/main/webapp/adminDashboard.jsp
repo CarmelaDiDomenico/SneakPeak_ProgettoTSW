@@ -21,6 +21,17 @@
             transition: 0.3s;
         }
         .admin-card:hover { background: #333; color: #fff; }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media screen and (max-width: 768px) {
+            .admin-menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            .admin-card {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
