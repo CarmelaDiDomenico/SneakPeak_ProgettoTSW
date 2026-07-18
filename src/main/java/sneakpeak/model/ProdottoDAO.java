@@ -240,4 +240,44 @@ public class ProdottoDAO {
             } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
+
+    // Cerca prodotti per nome (usato per la barra di ricerca AJAX)
+    public List<Prodotto> doSearch(String query) {
+        List<Prodotto> prodotti = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        // Cerca i prodotti in cui il nome contiene la stringa cercata (ignorando maiuscole/minuscole in MySQL di default)
+        // e si assicura che il prodotto non sia stato eliminato logicamente.
+        String selectSQL = "SELECT id_prodotto, nome, prezzo, immagine FROM PRODOTTO WHERE is_deleted = 0 AND nome LIKE ?";
+
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(selectSQL);
+            // I % servono per dire "qualsiasi cosa prima e qualsiasi cosa dopo"
+            ps.setString(1, "%" + query + "%");
+            
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Prodotto p = new Prodotto();
+                p.setIdProdotto(rs.getInt("id_prodotto"));
+                p.setNome(rs.getString("nome"));
+                p.setPrezzo(rs.getDouble("prezzo"));
+                p.setImmagine(rs.getString("immagine"));
+                // Non carichiamo tutti i campi perché per la tendina dei suggerimenti bastano questi
+                prodotti.add(p);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore ricerca prodotti: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return prodotti;
+    }
 }
