@@ -9,4 +9,18 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
+
+  <!-- Pagine di errore personalizzate: Tomcat non mostrerà mai la stack trace all'utente -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/errore404.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/errore500.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>403</error-code>
+    <location>/errore404.jsp</location>
+  </error-page>
 </web-app>
