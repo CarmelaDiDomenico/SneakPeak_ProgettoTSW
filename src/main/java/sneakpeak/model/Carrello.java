@@ -71,13 +71,23 @@ public class Carrello implements Serializable {
         return articoli;
     }
 
-    // Somma dei prezzi di tutte le scarpe nel carrello
-    public double getPrezzoTotale() {
+    // Somma dei prezzi netti di tutte le scarpe nel carrello
+    public double getPrezzoNetto() {
         double totale = 0;
         for (Prodotto p : articoli) {
             totale += p.getPrezzo();
         }
         return totale;
+    }
+
+    // Calcolo dell'IVA al 22% sul totale netto
+    public double getIva() {
+        return getPrezzoNetto() * 0.22;
+    }
+
+    // Prezzo Totale comprensivo di IVA
+    public double getPrezzoTotale() {
+        return getPrezzoNetto() + getIva();
     }
 
     // Verifica se il carrello è vuoto

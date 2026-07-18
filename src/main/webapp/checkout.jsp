@@ -83,7 +83,10 @@
         <% } %>
 
         <hr>
-        <h3>Riepilogo Totale: <span style="color: #d9534f;"><%= String.format("%.2f", totale) %> €</span></h3>
+        <div style="font-size: 1.1em; margin-bottom: 5px;">Imponibile: <span style="float: right;">€ <%= String.format("%.2f", carrello.getPrezzoNetto()) %></span></div>
+        <div style="font-size: 1.1em; margin-bottom: 5px;">IVA (22%): <span style="float: right;">€ <%= String.format("%.2f", carrello.getIva()) %></span></div>
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
+        <h3 style="margin-top: 0;">Riepilogo Totale: <span style="float: right; color: #d9534f;"><%= String.format("%.2f", totale) %> €</span></h3>
         <hr>
         
         <form action="checkout" method="POST">

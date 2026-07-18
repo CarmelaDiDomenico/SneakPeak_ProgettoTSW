@@ -220,6 +220,15 @@
                     <p style="color:#555;">Numero articoli: <b><%= carrello.getArticoli().size() %></b></p>
                     <p style="color:#555; font-size: 0.9em;">Spedizione: <span style="color:green; font-weight:bold;">Gratuita</span></p>
                     
+                    <div class="total-row" style="font-size: 1.1em; margin: 10px 0; font-weight: normal;">
+                        <span>Imponibile:</span>
+                        <span>€ <%= String.format("%.2f", carrello.getPrezzoNetto()) %></span>
+                    </div>
+                    <div class="total-row" style="font-size: 1.1em; margin: 10px 0; font-weight: normal;">
+                        <span>IVA (22%):</span>
+                        <span>€ <%= String.format("%.2f", carrello.getIva()) %></span>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
                     <div class="total-row">
                         <span>Totale:</span>
                         <span>€ <%= String.format("%.2f", carrello.getPrezzoTotale()) %></span>

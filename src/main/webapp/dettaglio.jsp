@@ -123,7 +123,10 @@
                     <h2><%= p.getNome() %></h2>
                     <p class="product-brand"><%= p.getMarca() %></p>
                     
-                    <div class="product-price">€ <%= String.format("%.2f", p.getPrezzo()) %></div>
+                    <div class="product-price">€ <%= String.format("%.2f", p.getPrezzo() * 1.22) %></div>
+                    <div style="font-size: 0.9em; color: #888; margin-top: -15px; margin-bottom: 20px;">
+                        Imponibile: € <%= String.format("%.2f", p.getPrezzo()) %> + IVA (22%)
+                    </div>
                     
                     <p class="product-desc"><%= p.getDescrizione() %></p>
                     
