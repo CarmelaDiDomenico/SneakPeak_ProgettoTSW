@@ -194,9 +194,14 @@
                             int qty = entry.getValue();
                     %>
                             <div class="cart-item-row">
-                                <div class="item-info">
-                                    <h4><%= p.getNome() %></h4>
-                                    <p>Marca: <%= p.getMarca() %></p>
+                                <div style="display: flex; align-items: center; flex-grow: 1;">
+                                    <div style="margin-right: 20px;">
+                                        <img src="<%= p.getImmagine() %>" alt="<%= p.getNome() %>" style="width: 80px; height: 80px; object-fit: contain; border-radius: 5px; border: 1px solid #ddd;">
+                                    </div>
+                                    <div class="item-info">
+                                        <h4 style="margin: 0 0 5px 0;"><%= p.getNome() %></h4>
+                                        <p style="margin: 0; color: #666;">Marca: <%= p.getMarca() %></p>
+                                    </div>
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <form action="modificaCarrello" method="POST" style="display:flex; align-items:center; margin-right: 15px;">

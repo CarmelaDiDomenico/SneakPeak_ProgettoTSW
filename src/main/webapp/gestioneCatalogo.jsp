@@ -42,7 +42,7 @@
             <th>Nome Prodotto</th>
             <th>Marca</th>
             <th>Stato</th>
-            <th>Modifica Prezzo (€)</th>
+            <th>Modifica Imponibile (€)</th>
             <th>Azione</th>
         </tr>
         

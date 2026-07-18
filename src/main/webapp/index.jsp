@@ -41,9 +41,12 @@
                 for(Prodotto p : prodotti) {
         %>
                     <div class="card">
-                        <h3><a href="dettaglio?id=<%= p.getIdProdotto() %>"><%= p.getNome() %></a></h3>
-                        <p>Marca: <%= p.getMarca() %></p>
-                        <p class="prezzo">€ <%= String.format("%.2f", p.getPrezzo()) %></p>
+                        <a href="dettaglio?id=<%= p.getIdProdotto() %>">
+                            <img src="<%= p.getImmagine() %>" alt="<%= p.getNome() %>" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px; border-radius: 5px;">
+                        </a>
+                        <h3 style="margin-top: 0;"><a href="dettaglio?id=<%= p.getIdProdotto() %>"><%= p.getNome() %></a></h3>
+                        <p style="margin-top: -5px;">Marca: <%= p.getMarca() %></p>
+                        <p class="prezzo">€ <%= String.format("%.2f", p.getPrezzo() * 1.22) %></p>
                         
                         <form action="aggiungiCarrello" method="POST">
     <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
