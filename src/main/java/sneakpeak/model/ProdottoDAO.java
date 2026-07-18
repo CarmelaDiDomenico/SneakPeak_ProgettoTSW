@@ -61,6 +61,46 @@ public class ProdottoDAO {
 
         return prodotti;
     }
+
+    public List<Prodotto> doRetrieveByCategory(int idCategoria) {
+        List<Prodotto> prodotti = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        String selectSQL = "SELECT * FROM PRODOTTO WHERE is_deleted = 0 AND id_categoria = ?";
+
+        try {
+            connection = DBConnectionPool.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, idCategoria);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Prodotto p = new Prodotto();
+                p.setIdProdotto(resultSet.getInt("id_prodotto"));
+                p.setNome(resultSet.getString("nome"));
+                p.setDescrizione(resultSet.getString("descrizione"));
+                p.setPrezzo(resultSet.getDouble("prezzo"));
+                p.setMarca(resultSet.getString("marca"));
+                p.setIsDeleted(resultSet.getInt("is_deleted"));
+                p.setIdCategoria(resultSet.getInt("id_categoria"));
+                p.setImmagine(resultSet.getString("immagine"));
+                prodotti.add(p);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore in ProdottoDAO.doRetrieveByCategory: " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) {
+                System.out.println("Errore chiusura risorse in ProdottoDAO: " + ex.getMessage());
+            }
+        }
+        return prodotti;
+    }
     
     public Prodotto doRetrieveById(int id) {
         Prodotto p = null;

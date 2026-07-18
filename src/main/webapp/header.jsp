@@ -143,7 +143,7 @@
 
             /* --- RESPONSIVE DESIGN (Media Query) --- */
             @media screen and (max-width: 768px) {
-                .nav a {
+                .nav a, .dropdown .dropbtn {
                     float: none;
                     display: block;
                     width: 100%;
@@ -168,6 +168,10 @@
                     width: calc(100% - 20px);
                     left: 10px;
                 }
+                .dropdown-content {
+                    position: relative;
+                    top: 0;
+                }
                 
                 /* Classi di utilità per tabelle responsive in altre pagine */
                 .table-responsive {
@@ -175,6 +179,55 @@
                     display: block;
                     width: 100%;
                 }
+            }
+            
+            /* --- DROPDOWN CATEGORIE --- */
+            .dropdown {
+                float: left;
+                position: relative;
+            }
+            .dropdown .dropbtn {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 20px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+                cursor: pointer;
+                text-decoration: none;
+                display: block;
+            }
+            .nav a:hover, .dropdown:hover .dropbtn {
+                background-color: #ddd;
+                color: black;
+            }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f9f9f9;
+                min-width: 100%;
+                white-space: nowrap;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1000;
+                top: 100%; /* Si attacca perfettamente sotto */
+                left: 0;
+            }
+            .dropdown-content a {
+                float: none;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+            }
+            .dropdown-content a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
             }
         </style>
 
@@ -184,7 +237,22 @@
         </div>
 
         <div class="nav">
-            <a href="home">Catalogo Prodotti</a>
+            <div class="dropdown">
+                <a href="home" class="dropbtn">Catalogo Prodotti ▼</a>
+                <div class="dropdown-content">
+                    <%
+                        sneakpeak.model.CategoriaDAO catDAO = new sneakpeak.model.CategoriaDAO();
+                        java.util.List<sneakpeak.model.Categoria> categorie = catDAO.doRetrieveAll();
+                        if(categorie != null) {
+                            for (sneakpeak.model.Categoria cat : categorie) {
+                    %>
+                        <a href="home?categoria=<%= cat.getIdCategoria() %>"><%= cat.getNome() %></a>
+                    <% 
+                            }
+                        } 
+                    %>
+                </div>
+            </div>
             <a href="carrello.jsp">Carrello</a>
 
             <!-- BARRA DI RICERCA AJAX -->

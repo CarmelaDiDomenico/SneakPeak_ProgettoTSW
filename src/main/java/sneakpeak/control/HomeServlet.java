@@ -26,8 +26,16 @@ public class HomeServlet extends HttpServlet {
         // 1. Chiamiamo il nostro DAO
         ProdottoDAO prodottoDAO = new ProdottoDAO();
         
-        // 2. Usiamo il metodo di cui parlavamo prima per prendere tutte le scarpe
-        List<Prodotto> catalogo = prodottoDAO.doRetrieveAll();
+        // Leggiamo se c'è un filtro categoria
+        String idCategoriaStr = request.getParameter("categoria");
+        List<Prodotto> catalogo;
+        
+        if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
+            int idCategoria = Integer.parseInt(idCategoriaStr);
+            catalogo = prodottoDAO.doRetrieveByCategory(idCategoria);
+        } else {
+            catalogo = prodottoDAO.doRetrieveAll();
+        }
         
         // 3. Inseriamo questa lista di scarpe dentro la "richiesta" (request) 
         // dandole l'etichetta "listaProdotti". In questo modo la pagina JSP potrà leggerla.
