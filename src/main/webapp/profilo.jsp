@@ -38,14 +38,14 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="password"] {
+        .container input[type="text"], .container input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
         }
-        input:focus {
+        .container input:focus {
             border-color: #39FF14;
             outline: none;
             box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
@@ -155,7 +155,41 @@
             }
         %>
 
-        <!-- Pulsante "Torna allo Storico Ordini" (lo creeremo nel prossimo step) -->
+        <!-- FORM PER AGGIUNGERE UN NUOVO INDIRIZZO -->
+        <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 4px; margin-top: 20px;">
+            <h3 style="color: #2F4F4F; margin-top: 0;">Aggiungi un nuovo indirizzo</h3>
+            <form action="aggiungiIndirizzo" method="POST" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <div style="flex: 1 1 45%; min-width: 200px;">
+                    <label>Via/Piazza:</label>
+                    <input type="text" name="via" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 45%; min-width: 100px;">
+                    <label>Civico:</label>
+                    <input type="text" name="civico" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 45%; min-width: 200px;">
+                    <label>Città:</label>
+                    <input type="text" name="citta" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 45%; min-width: 100px;">
+                    <label>CAP:</label>
+                    <input type="text" name="cap" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 45%; min-width: 200px;">
+                    <label>Provincia (Es. MI):</label>
+                    <input type="text" name="provincia" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 45%; min-width: 200px;">
+                    <label>Nazione:</label>
+                    <input type="text" name="nazione" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="flex: 1 1 100%; margin-top: 10px;">
+                    <button type="submit" style="width: 100%; background-color: #337ab7; color: white;">Aggiungi Indirizzo</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Pulsante "Torna allo Storico Ordini" -->
         <br>
         <a href="storicoOrdini" style="display:inline-block; padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 4px;">Vai allo Storico Ordini</a>
 

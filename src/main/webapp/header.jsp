@@ -8,6 +8,9 @@
                 color: #333;
                 margin: 0;
                 padding: 0;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
             }
 
             /* Stile dell'intestazione */
@@ -21,7 +24,13 @@
             /* Stile della barra di navigazione */
             .nav {
                 background-color: #1a1a1a;
-                overflow: hidden;
+                /* Rimosso overflow: hidden perché tagliava il menu a tendina! */
+            }
+            /* Clearfix per gestire gli elementi float interni (a) senza tagliare l'esterno */
+            .nav::after {
+                content: "";
+                display: table;
+                clear: both;
             }
 
             .nav a {
@@ -70,6 +79,7 @@
                 position: relative;
                 float: left;
                 padding: 10px 20px;
+                z-index: 9999;
             }
             .search-input {
                 padding: 6px;
@@ -85,26 +95,31 @@
             .search-results {
                 display: none; /* Nascosto di default */
                 position: absolute;
-                top: 45px;
+                top: 50px;
                 left: 20px;
+                right: 20px;
                 background-color: white;
-                min-width: 250px;
                 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                z-index: 1000;
+                z-index: 10000;
                 border-radius: 4px;
                 max-height: 300px;
                 overflow-y: auto;
+                box-sizing: border-box;
             }
             .search-result-item {
-                color: black;
+                color: black !important;
                 padding: 10px;
                 text-decoration: none;
                 display: flex;
                 align-items: center;
                 border-bottom: 1px solid #eee;
+                text-align: left;
+                width: 100%;
+                box-sizing: border-box;
             }
             .search-result-item:hover {
-                background-color: #f1f1f1;
+                background-color: #f1f1f1 !important;
+                color: black !important;
             }
             .search-img {
                 width: 40px;
