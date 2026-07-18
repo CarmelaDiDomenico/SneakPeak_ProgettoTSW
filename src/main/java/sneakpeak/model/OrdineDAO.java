@@ -160,4 +160,108 @@ public class OrdineDAO {
             } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
+
+    // Recupera TUTTI gli ordini per un singolo Utente (Storico Ordini Cliente)
+    public java.util.List<Ordine> doRetrieveByUtente(int idUtente) {
+        java.util.List<Ordine> ordini = new java.util.ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+     
+        String selectSQL = "SELECT * FROM ORDINE WHERE id_utente = ? ORDER BY data_ordine DESC, id_ordine DESC";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(selectSQL);
+            ps.setInt(1, idUtente);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Ordine o = new Ordine();
+                o.setIdOrdine(rs.getInt("id_ordine"));
+                o.setIdUtente(rs.getInt("id_utente"));
+                o.setTotale(rs.getDouble("totale"));
+                o.setDataOrdine(rs.getDate("data_ordine"));
+                o.setIdIndirizzo(rs.getInt("id_indirizzo"));
+                o.setIdPagamento(rs.getInt("id_pagamento"));
+                o.setStato(rs.getString("stato"));
+                ordini.add(o);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore recupero ordini utente: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return ordini;
+    }
+
+    // Filtra ordini per Admin (per cliente e/o date)
+    public java.util.List<Ordine> doRetrieveFiltered(String clienteSearch, java.sql.Date dataInizio, java.sql.Date dataFine) {
+        java.util.List<Ordine> ordini = new java.util.ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        // Costruiamo la query dinamicamente facendo una JOIN con la tabella UTENTE
+        // per poter cercare per nome, cognome o email.
+        StringBuilder query = new StringBuilder("SELECT o.* FROM ORDINE o JOIN UTENTE u ON o.id_utente = u.id_utente WHERE 1=1");
+        
+        if (clienteSearch != null && !clienteSearch.trim().isEmpty()) {
+            query.append(" AND (u.nome LIKE ? OR u.cognome LIKE ? OR u.email LIKE ?)");
+        }
+        if (dataInizio != null) {
+            query.append(" AND o.data_ordine >= ?");
+        }
+        if (dataFine != null) {
+            query.append(" AND o.data_ordine <= ?");
+        }
+        
+        query.append(" ORDER BY o.data_ordine DESC, o.id_ordine DESC");
+
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(query.toString());
+            
+            int index = 1;
+            if (clienteSearch != null && !clienteSearch.trim().isEmpty()) {
+                String searchPattern = "%" + clienteSearch.trim() + "%";
+                ps.setString(index++, searchPattern);
+                ps.setString(index++, searchPattern);
+                ps.setString(index++, searchPattern);
+            }
+            if (dataInizio != null) {
+                ps.setDate(index++, dataInizio);
+            }
+            if (dataFine != null) {
+                ps.setDate(index++, dataFine);
+            }
+
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Ordine o = new Ordine();
+                o.setIdOrdine(rs.getInt("id_ordine"));
+                o.setIdUtente(rs.getInt("id_utente"));
+                o.setTotale(rs.getDouble("totale"));
+                o.setDataOrdine(rs.getDate("data_ordine"));
+                o.setIdIndirizzo(rs.getInt("id_indirizzo"));
+                o.setIdPagamento(rs.getInt("id_pagamento"));
+                o.setStato(rs.getString("stato"));
+                ordini.add(o);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore recupero ordini filtrati (JOIN): " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return ordini;
+    }
 }
