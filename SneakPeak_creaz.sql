@@ -15,6 +15,7 @@ CREATE TABLE PRODOTTO (
     descrizione TEXT,
     prezzo DECIMAL(10,2) NOT NULL,
     marca VARCHAR(50),
+    immagine VARCHAR(255) DEFAULT 'img/default.jpg', -- Percorso relativo all'immagine del prodotto
     is_deleted INT DEFAULT 0, -- 0 significa attivo, 1 significa nascosto/eliminato logicamente
     id_categoria INT,
     FOREIGN KEY (id_categoria) REFERENCES CATEGORIA(id_categoria) ON DELETE SET NULL

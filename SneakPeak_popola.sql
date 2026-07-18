@@ -12,15 +12,15 @@ INSERT INTO CATEGORIA (nome) VALUES
 -- ==========================================
 -- 2. POPOLAZIONE TABELLA PRODOTTO
 -- ==========================================
--- Inseriamo alcune sneaker popolari. 
--- id_categoria fa riferimento agli ID creati sopra (1=Uomo, 2=Donna, 3=Unisex, 4=Bambini)
+-- id_categoria: 1=Uomo, 2=Donna, 3=Unisex, 4=Bambini
 -- is_deleted è 0 di default (prodotto visibile e attivo)
-INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, id_categoria) VALUES 
-('Nike Air Jordan 1 High', 'L''iconica scarpa da basket che ha fatto la storia dello streetwear. Colore Chicago.', 180.00, 'Nike', 1),
-('Adidas Yeezy Boost 350', 'Sneaker dal design innovativo con suola ammortizzata Boost. Colore Onyx.', 230.00, 'Adidas', 3),
-('Nike Dunk Low Panda', 'Versatile e popolarissima, perfetta per l''uso quotidiano. Bianco e nero.', 120.00, 'Nike', 2),
-('New Balance 550', 'Stile retrò anni 80, ottima per un look casual. Bianco e verde neon.', 140.00, 'New Balance', 1),
-('Puma Suede Classic', 'Un classico intramontabile in pelle scamosciata per i più piccoli.', 60.00, 'Puma', 4);
+-- Le immagini sono nella cartella src/main/webapp/img/
+INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, immagine, id_categoria) VALUES 
+('Nike Air Jordan 1 High', 'L''iconica scarpa da basket che ha fatto la storia dello streetwear. Colore Chicago.', 180.00, 'Nike', 'img/jordan1-chicago.jpg', 1),
+('Adidas Yeezy Boost 350', 'Sneaker dal design innovativo con suola ammortizzata Boost. Colore Onyx.', 230.00, 'Adidas', 'img/yeezy-onyx.jpeg', 3),
+('Nike Dunk Low Panda', 'Versatile e popolarissima, perfetta per l''uso quotidiano. Bianco e nero.', 120.00, 'Nike', 'img/dunk-panda.jpeg', 2),
+('New Balance 550', 'Stile retrò anni 80, ottima per un look casual. Bianco e verde neon.', 140.00, 'New Balance', 'img/nb550.jpeg', 1),
+('Puma Suede Classic', 'Un classico intramontabile in pelle scamosciata per i più piccoli.', 60.00, 'Puma', 'img/puma-suede.jpeg', 4);
 
 -- ==========================================
 -- 3. POPOLAZIONE TABELLA UTENTE
