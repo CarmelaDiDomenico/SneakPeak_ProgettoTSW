@@ -37,12 +37,38 @@
         <a href="adminDashboard.jsp" style="text-decoration: none; color: #337ab7; font-weight: bold;">🔙 Torna alla Dashboard</a>
     </div>
 
+    <!-- FORM FILTRI (Requisito della checklist) -->
+    <div style="width: 95%; margin: 20px auto; background: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; text-align: center;">
+        <form action="gestioneOrdini" method="GET" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+            <label><strong>Filtra per:</strong></label>
+            
+            <div>
+                <label>Cliente (Nome/Cognome/Email):</label>
+                <input type="text" name="clienteSearch" placeholder="Es. Mario Rossi" value="<%= request.getParameter("clienteSearch") != null ? request.getParameter("clienteSearch") : "" %>" style="padding: 5px; width: 180px;">
+            </div>
+            
+            <div>
+                <label>Da:</label>
+                <input type="date" name="dataInizio" value="<%= request.getParameter("dataInizio") != null ? request.getParameter("dataInizio") : "" %>" style="padding: 5px;">
+            </div>
+            
+            <div>
+                <label>A:</label>
+                <input type="date" name="dataFine" value="<%= request.getParameter("dataFine") != null ? request.getParameter("dataFine") : "" %>" style="padding: 5px;">
+            </div>
+            
+            <button type="submit" style="background-color: #337ab7; color: white; border: none; padding: 7px 15px; cursor: pointer; border-radius: 4px;">Applica Filtri</button>
+            <a href="gestioneOrdini" style="text-decoration: none; background-color: #d9534f; color: white; padding: 7px 15px; border-radius: 4px;">Resetta</a>
+        </form>
+    </div>
+
     <% if (listaOrdini == null || listaOrdini.isEmpty()) { %>
-        <p style="text-align: center; margin-top: 30px; font-size: 18px;">Nessun ordine presente nel database al momento.</p>
+        <p style="text-align: center; margin-top: 30px; font-size: 18px;">Nessun ordine trovato con questi criteri.</p>
     <% } else { %>
-        <table>
-            <tr>
-                <th>N° Ordine</th>
+        <div class="table-responsive">
+            <table>
+                <tr>
+                    <th>N° Ordine</th>
                 <th>Data</th>
                 <th>ID Cliente</th>
                 <th>Totale</th>
@@ -85,7 +111,8 @@
                 </td>
             </tr>
             <% } %>
-        </table>
+            </table>
+        </div>
     <% } %>
 
 </body>

@@ -29,7 +29,45 @@ public class GestioneOrdiniServlet extends HttpServlet {
         }
 
         OrdineDAO dao = new OrdineDAO();
-        List<Ordine> listaOrdini = dao.doRetrieveAll();
+        List<Ordine> listaOrdini;
+        
+        // Lettura parametri di filtro
+        String clienteSearch = request.getParameter("clienteSearch");
+        String dataInizioStr = request.getParameter("dataInizio");
+        String dataFineStr = request.getParameter("dataFine");
+        
+        java.sql.Date dataInizio = null;
+        java.sql.Date dataFine = null;
+        
+        boolean hasFilters = false;
+
+        if (clienteSearch != null && !clienteSearch.trim().isEmpty()) {
+            hasFilters = true;
+        }
+        
+        if (dataInizioStr != null && !dataInizioStr.trim().isEmpty()) {
+            try {
+                dataInizio = java.sql.Date.valueOf(dataInizioStr); // Formato YYYY-MM-DD
+                hasFilters = true;
+            } catch (IllegalArgumentException e) {
+                // Ignore
+            }
+        }
+        
+        if (dataFineStr != null && !dataFineStr.trim().isEmpty()) {
+            try {
+                dataFine = java.sql.Date.valueOf(dataFineStr);
+                hasFilters = true;
+            } catch (IllegalArgumentException e) {
+                // Ignore
+            }
+        }
+        
+        if (hasFilters) {
+            listaOrdini = dao.doRetrieveFiltered(clienteSearch, dataInizio, dataFine);
+        } else {
+            listaOrdini = dao.doRetrieveAll();
+        }
         
         request.setAttribute("listaOrdini", listaOrdini);
         RequestDispatcher dispatcher = request.getRequestDispatcher("gestioneOrdini.jsp");
