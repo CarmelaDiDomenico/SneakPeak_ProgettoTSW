@@ -149,4 +149,43 @@ public class UtenteDAO {
         
         return u;
     }
+
+    /**
+     * 3. METODO PER AGGIORNARE IL PROFILO
+     * Riceve un Utente e aggiorna i suoi dati nel database usando il suo ID.
+     */
+    public boolean doUpdate(Utente utente) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        
+        String updateSQL = "UPDATE UTENTE SET nome = ?, cognome = ?, password = ? WHERE id_utente = ?";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            preparedStatement = connection.prepareStatement(updateSQL);
+            
+            preparedStatement.setString(1, utente.getNome());
+            preparedStatement.setString(2, utente.getCognome());
+            
+            // La password deve arrivare a questo metodo GIA' CIFRATA, 
+            // oppure vuota se non si vuole cambiare.
+            preparedStatement.setString(3, utente.getPassword()); 
+            
+            preparedStatement.setInt(4, utente.getIdUtente());
+            
+            int result = preparedStatement.executeUpdate();
+            return (result > 0);
+            
+        } catch (SQLException e) {
+            System.out.println("Errore durante l'aggiornamento profilo: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) {
+                System.out.println("Errore chiusura risorse: " + ex.getMessage());
+            }
+        }
+    }
 }

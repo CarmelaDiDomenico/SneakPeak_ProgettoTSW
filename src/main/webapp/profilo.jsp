@@ -1,0 +1,207 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="sneakpeak.model.Utente" %>
+<%@ page import="sneakpeak.model.Indirizzo" %>
+<%@ page import="java.util.List" %>
+<%
+    // Sicurezza: blocchiamo gli accessi diretti alla pagina senza login
+    Utente utente = (Utente) session.getAttribute("utenteLoggato");
+    if (utente == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Il tuo Profilo - SneakPeak</title>
+    <style>
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            color: #2F4F4F;
+            border-bottom: 2px solid #39FF14;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #39FF14;
+            outline: none;
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+        button {
+            background-color: #39FF14;
+            color: black;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2eb80f;
+            color: white;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        .indirizzo-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- IL MENU (Inclusione fragment) -->
+    <jsp:include page="header.jsp" />
+
+    <div class="container">
+        
+        <% if ("true".equals(request.getParameter("successo"))) { %>
+            <div class="alert alert-success">Profilo aggiornato con successo!</div>
+        <% } else if ("true".equals(request.getParameter("errore"))) { %>
+            <div class="alert alert-error">Errore durante l'aggiornamento. Riprova.</div>
+        <% } %>
+
+        <h2 class="section-title">I Tuoi Dati Personali</h2>
+        
+        <form action="profilo" method="POST" id="formProfilo">
+            <div class="form-group">
+                <label>Email (Non modificabile):</label>
+                <input type="text" value="<%= utente.getEmail() %>" disabled style="background-color: #e9ecef;">
+            </div>
+
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" value="<%= utente.getNome() %>" placeholder="Inserisci il tuo nome">
+                <span class="error" id="errorNome"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="cognome">Cognome:</label>
+                <input type="text" id="cognome" name="cognome" value="<%= utente.getCognome() %>" placeholder="Inserisci il tuo cognome">
+                <span class="error" id="errorCognome"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Nuova Password (lascia vuoto per non cambiarla):</label>
+                <input type="password" id="password" name="password" placeholder="Minimo 8 caratteri">
+                <span class="error" id="errorPassword"></span>
+            </div>
+
+            <button type="submit">Salva Modifiche</button>
+        </form>
+
+        <br><br>
+
+        <h2 class="section-title">I Tuoi Indirizzi di Spedizione</h2>
+        
+        <%
+            // Questa lista ci arriva dalla ProfiloServlet
+            List<Indirizzo> indirizzi = (List<Indirizzo>) request.getAttribute("listaIndirizzi");
+            if (indirizzi != null && !indirizzi.isEmpty()) {
+                for (Indirizzo ind : indirizzi) {
+        %>
+            <div class="indirizzo-card">
+                <p><strong>Via/Piazza:</strong> <%= ind.getVia() %> <%= ind.getCivico() %></p>
+                <p><strong>Città:</strong> <%= ind.getCitta() %> (<%= ind.getProvincia() %>) - <%= ind.getCap() %></p>
+                <p><strong>Nazione:</strong> <%= ind.getNazione() %></p>
+            </div>
+        <%
+                }
+            } else {
+        %>
+            <p>Non hai ancora salvato nessun indirizzo. Potrai aggiungerne uno al tuo primo acquisto!</p>
+        <%
+            }
+        %>
+
+        <!-- Pulsante "Torna allo Storico Ordini" (lo creeremo nel prossimo step) -->
+        <br>
+        <a href="storicoOrdini" style="display:inline-block; padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 4px;">Vai allo Storico Ordini</a>
+
+    </div>
+
+    <!-- IL PIE' DI PAGINA (Inclusione fragment) -->
+    <jsp:include page="footer.jsp" />
+
+    <script>
+        // VALIDAZIONE LATO CLIENT (Rispetta i requisiti della checklist!)
+        document.getElementById('formProfilo').addEventListener('submit', function(event) {
+            let formValido = true;
+
+            // Pulisci vecchi errori
+            document.getElementById('errorNome').innerText = "";
+            document.getElementById('errorCognome').innerText = "";
+            document.getElementById('errorPassword').innerText = "";
+
+            const regexNomeCognome = /^[A-Za-zÀ-ÿ\s]{2,50}$/;
+
+            // Controllo Nome
+            const nome = document.getElementById('nome').value.trim();
+            if (!regexNomeCognome.test(nome)) {
+                document.getElementById('errorNome').innerText = "Inserisci un nome valido (solo lettere).";
+                formValido = false;
+            }
+
+            // Controllo Cognome
+            const cognome = document.getElementById('cognome').value.trim();
+            if (!regexNomeCognome.test(cognome)) {
+                document.getElementById('errorCognome').innerText = "Inserisci un cognome valido (solo lettere).";
+                formValido = false;
+            }
+
+            // Controllo Password (solo se l'utente ha provato a scriverci qualcosa)
+            const password = document.getElementById('password').value;
+            if (password.length > 0 && password.length < 8) {
+                document.getElementById('errorPassword').innerText = "La nuova password deve essere lunga almeno 8 caratteri.";
+                formValido = false;
+            }
+
+            // Se c'è un errore blocco l'invio al server
+            if (!formValido) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
