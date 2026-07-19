@@ -122,6 +122,7 @@ public class CheckoutServlet extends HttpServlet {
         
         if (success) {
             session.removeAttribute("carrello"); // Svuota carrello
+            session.setAttribute("ordineConfermato", true);
             response.sendRedirect("confermaOrdine.jsp");
         } else {
             response.sendRedirect("carrello.jsp?erroreCheckout=true");

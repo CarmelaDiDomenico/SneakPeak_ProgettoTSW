@@ -1,4 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // Controllo di sicurezza: accessibile solo se loggato E se ha appena completato un ordine
+    if (session.getAttribute("utenteLoggato") == null || session.getAttribute("ordineConfermato") == null) {
+        response.sendRedirect("home");
+        return;
+    }
+    // Rimuoviamo l'attributo così se ricarica la pagina non può rivederla
+    session.removeAttribute("ordineConfermato");
+%>
 <!DOCTYPE html>
 <html>
 <head>
