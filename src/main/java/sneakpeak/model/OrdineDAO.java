@@ -102,20 +102,24 @@ public class OrdineDAO {
         }
     }
     
- // Recupera TUTTI gli ordini per l'Amministratore
+ // Recupera TUTTI gli ordini per l'Amministratore (con JOIN su UTENTE per mostrare il nome del cliente)
     public java.util.List<Ordine> doRetrieveAll() {
         java.util.List<Ordine> ordini = new java.util.ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-     
-        String selectSQL = "SELECT * FROM ORDINE ORDER BY data_ordine DESC, id_ordine DESC";
-        
+
+        // LEFT JOIN: se l'utente è stato cancellato, l'ordine viene comunque restituito
+        String selectSQL =
+            "SELECT o.*, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente " +
+            "FROM ORDINE o LEFT JOIN UTENTE u ON o.id_utente = u.id_utente " +
+            "ORDER BY o.data_ordine DESC, o.id_ordine DESC";
+
         try {
             connection = DBConnectionPool.getConnection();
             ps = connection.prepareStatement(selectSQL);
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Ordine o = new Ordine();
                 o.setIdOrdine(rs.getInt("id_ordine"));
@@ -125,6 +129,11 @@ public class OrdineDAO {
                 o.setIdIndirizzo(rs.getInt("id_indirizzo"));
                 o.setIdPagamento(rs.getInt("id_pagamento"));
                 o.setStato(rs.getString("stato"));
+                // Campi dalla JOIN con UTENTE
+                String nome    = rs.getString("nome_utente");
+                String cognome = rs.getString("cognome_utente");
+                o.setNomeCliente((nome != null ? nome + " " + cognome : "Utente eliminato"));
+                o.setEmailCliente(rs.getString("email_utente") != null ? rs.getString("email_utente") : "—");
                 ordini.add(o);
             }
         } catch (SQLException e) {
@@ -253,7 +262,9 @@ public class OrdineDAO {
 
         // Costruiamo la query dinamicamente facendo una JOIN con la tabella UTENTE
         // per poter cercare per nome, cognome o email.
-        StringBuilder query = new StringBuilder("SELECT o.* FROM ORDINE o JOIN UTENTE u ON o.id_utente = u.id_utente WHERE 1=1");
+        StringBuilder query = new StringBuilder(
+            "SELECT o.*, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente " +
+            "FROM ORDINE o LEFT JOIN UTENTE u ON o.id_utente = u.id_utente WHERE 1=1");
         
         if (clienteSearch != null && !clienteSearch.trim().isEmpty()) {
             query.append(" AND (u.nome LIKE ? OR u.cognome LIKE ? OR u.email LIKE ?)");
@@ -296,6 +307,11 @@ public class OrdineDAO {
                 o.setIdIndirizzo(rs.getInt("id_indirizzo"));
                 o.setIdPagamento(rs.getInt("id_pagamento"));
                 o.setStato(rs.getString("stato"));
+                // Campi dalla JOIN con UTENTE
+                String nome    = rs.getString("nome_utente");
+                String cognome = rs.getString("cognome_utente");
+                o.setNomeCliente(nome != null ? nome + " " + cognome : "Utente eliminato");
+                o.setEmailCliente(rs.getString("email_utente") != null ? rs.getString("email_utente") : "—");
                 ordini.add(o);
             }
         } catch (SQLException e) {

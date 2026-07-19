@@ -11,6 +11,11 @@ public class Ordine {
     private int idPagamento;
     private String stato;
 
+    // Campi transient: non presenti nella tabella ORDINE,
+    // vengono popolati dalla JOIN con UTENTE nelle query Admin.
+    private String nomeCliente;
+    private String emailCliente;
+
     // Costruttore vuoto
     public Ordine() {}
 
@@ -55,4 +60,16 @@ public class Ordine {
     
     public void setStato(String stato) 
     { this.stato = stato; }
+
+    public String getNomeCliente()
+    { return nomeCliente; }
+
+    public void setNomeCliente(String nomeCliente)
+    { this.nomeCliente = nomeCliente; }
+
+    public String getEmailCliente()
+    { return emailCliente; }
+
+    public void setEmailCliente(String emailCliente)
+    { this.emailCliente = emailCliente; }
 }

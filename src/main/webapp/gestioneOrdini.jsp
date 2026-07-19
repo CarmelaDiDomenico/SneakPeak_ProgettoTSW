@@ -68,9 +68,9 @@
         <div class="table-responsive">
             <table>
                 <tr>
-                    <th>N° Ordine</th>
+                <th>N° Ordine</th>
                 <th>Data</th>
-                <th>ID Cliente</th>
+                <th>Cliente</th>
                 <th>Totale</th>
                 <th>Stato Attuale</th>
                 <th>Aggiorna Stato Spedizione</th>
@@ -86,7 +86,10 @@
             <tr>
                 <td><strong>#<%= o.getIdOrdine() %></strong></td>
                 <td><%= o.getDataOrdine() %></td>
-                <td><%= o.getIdUtente() %></td>
+                <td>
+                    <strong><%= o.getNomeCliente() != null ? o.getNomeCliente() : "—" %></strong><br>
+                    <span style="font-size:12px; color:#777;"><%= o.getEmailCliente() != null ? o.getEmailCliente() : "" %></span>
+                </td>
                 <td><strong><%= String.format("%.2f", o.getTotale()) %> €</strong></td>
                 
                 <td>
