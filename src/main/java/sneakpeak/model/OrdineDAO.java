@@ -200,6 +200,50 @@ public class OrdineDAO {
         return ordini;
     }
 
+    // Recupera i dettagli di un singolo ordine (prodotti acquistati, quantità, prezzi storici)
+    public java.util.List<DettaglioOrdine> doRetrieveDettagliByOrdine(int idOrdine) {
+        java.util.List<DettaglioOrdine> dettagli = new java.util.ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        // JOIN con PRODOTTO per ottenere il nome del prodotto al momento della visualizzazione.
+        // prezzo_acquisto e iva_acquisto sono quelli storici salvati al momento dell'ordine.
+        String selectSQL =
+            "SELECT d.id_ordine, d.id_prodotto, p.nome AS nome_prodotto, " +
+            "       d.quantita, d.prezzo_acquisto, d.iva_acquisto " +
+            "FROM DETTAGLIO_ORDINE d " +
+            "JOIN PRODOTTO p ON d.id_prodotto = p.id_prodotto " +
+            "WHERE d.id_ordine = ?";
+
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(selectSQL);
+            ps.setInt(1, idOrdine);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                DettaglioOrdine d = new DettaglioOrdine();
+                d.setIdOrdine(rs.getInt("id_ordine"));
+                d.setIdProdotto(rs.getInt("id_prodotto"));
+                d.setNomeProdotto(rs.getString("nome_prodotto"));
+                d.setQuantita(rs.getInt("quantita"));
+                d.setPrezzoAcquisto(rs.getDouble("prezzo_acquisto"));
+                d.setIvaAcquisto(rs.getDouble("iva_acquisto"));
+                dettagli.add(d);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore recupero dettagli ordine #" + idOrdine + ": " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return dettagli;
+    }
+
     // Filtra ordini per Admin (per cliente e/o date)
     public java.util.List<Ordine> doRetrieveFiltered(String clienteSearch, java.sql.Date dataInizio, java.sql.Date dataFine) {
         java.util.List<Ordine> ordini = new java.util.ArrayList<>();
