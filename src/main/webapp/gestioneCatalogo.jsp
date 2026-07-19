@@ -42,7 +42,7 @@
             <th>Nome Prodotto</th>
             <th>Marca</th>
             <th>Stato</th>
-            <th>Modifica Imponibile (€)</th>
+            <th>Modifica</th>
             <th>Azione</th>
         </tr>
         
@@ -61,12 +61,7 @@
             </td>
 
             <td>
-                <form action="gestioneCatalogo" method="POST" style="display:inline;">
-                    <input type="hidden" name="action" value="modificaPrezzo">
-                    <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
-                    <input type="number" name="nuovoPrezzo" step="0.01" value="<%= p.getPrezzo() %>" style="width: 70px; padding: 3px;">
-                    <button type="submit" class="btn-update">✏️ Salva</button>
-                </form>
+                <a href="modificaProdotto?idProdotto=<%= p.getIdProdotto() %>" class="btn-update" style="text-decoration:none; display:inline-block;">✏️ Modifica Dettagli</a>
             </td>
 
             <td>

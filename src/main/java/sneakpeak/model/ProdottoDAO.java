@@ -238,6 +238,47 @@ public class ProdottoDAO {
         }
     }
 
+    // Modifica completa di un prodotto
+    public boolean updateProdottoCompleto(Prodotto p, boolean aggiornaImmagine) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        
+        String updateSQL = "UPDATE PRODOTTO SET nome = ?, descrizione = ?, prezzo = ?, marca = ?, id_categoria = ?";
+        if (aggiornaImmagine) {
+            updateSQL += ", immagine = ?";
+        }
+        updateSQL += " WHERE id_prodotto = ?";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(updateSQL);
+            
+            ps.setString(1, p.getNome());
+            ps.setString(2, p.getDescrizione());
+            ps.setDouble(3, p.getPrezzo());
+            ps.setString(4, p.getMarca());
+            ps.setInt(5, p.getIdCategoria());
+            
+            int parameterIndex = 6;
+            
+            if (aggiornaImmagine) {
+                ps.setString(parameterIndex++, p.getImmagine());
+            }
+            
+            ps.setInt(parameterIndex, p.getIdProdotto());
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Errore updateProdottoCompleto: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+    }
+
     // Nasconde un prodotto 
     public boolean nascondiProdotto(int idProdotto) {
         Connection connection = null;
