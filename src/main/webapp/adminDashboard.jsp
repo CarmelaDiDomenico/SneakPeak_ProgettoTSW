@@ -43,7 +43,7 @@
         <p>Bentornato Amministratore, <strong><%= admin.getNome() %></strong>. Cosa vuoi fare oggi?</p>
         
         <div class="admin-menu">
-            <a href="aggiungiProdotto.jsp" class="admin-card">
+            <a href="aggiungiProdotto" class="admin-card">
                 👟 Aggiungi Nuovo Prodotto
             </a>
             

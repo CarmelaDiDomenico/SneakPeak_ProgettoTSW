@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="sneakpeak.model.Utente" %>
+<%@ page import="sneakpeak.model.Categoria" %>
+<%@ page import="java.util.List" %>
 
 <%
     // Controllo di sicurezza
@@ -55,8 +57,20 @@
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label style="font-weight: bold;">Categoria (ID):</label><br>
-                <input type="number" name="idCategoria" min="1" placeholder="Inserisci l'ID Categoria (es. 1)" required style="width: 100%; padding: 10px; margin-top: 5px;">
+                <label style="font-weight: bold;">Categoria:</label><br>
+                <select name="idCategoria" required style="width: 100%; padding: 10px; margin-top: 5px; background-color: #fff; border: 1px solid #ccc;">
+                    <option value="">Seleziona una categoria...</option>
+                    <%
+                        List<Categoria> categorie = (List<Categoria>) request.getAttribute("categorie");
+                        if (categorie != null) {
+                            for (Categoria c : categorie) {
+                    %>
+                                <option value="<%= c.getIdCategoria() %>"><%= c.getNome() %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
             </div>
 
             <div style="margin-bottom: 20px;">

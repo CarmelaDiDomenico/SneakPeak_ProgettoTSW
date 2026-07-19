@@ -12,9 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import sneakpeak.model.Categoria;
+import sneakpeak.model.CategoriaDAO;
 import sneakpeak.model.Prodotto;
 import sneakpeak.model.ProdottoDAO;
 import sneakpeak.model.Utente;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 
 @WebServlet("/aggiungiProdotto")
 // ANNOTAZIONE PER GESTIRE I FILE
@@ -25,7 +29,20 @@ public class AggiungiProdottoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("aggiungiProdotto.jsp");
+        HttpSession session = request.getSession();
+        Utente admin = (Utente) session.getAttribute("utenteLoggato");
+        
+        if (admin == null || !"ADMIN".equalsIgnoreCase(admin.getTipo())) {
+            response.sendRedirect("login.jsp?errore=accesso_negato");
+            return;
+        }
+
+        CategoriaDAO categoriaDAO = new CategoriaDAO();
+        List<Categoria> categorie = categoriaDAO.doRetrieveAll();
+        request.setAttribute("categorie", categorie);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("aggiungiProdotto.jsp");
+        dispatcher.forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
