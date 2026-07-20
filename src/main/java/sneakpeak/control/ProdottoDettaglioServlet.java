@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import sneakpeak.model.Prodotto;
 import sneakpeak.model.ProdottoDAO;
+import sneakpeak.model.Recensione;
+import sneakpeak.model.RecensioneDAO;
+import java.util.List;
 
 // Questa Servlet risponderà all'URL "/dettaglio"
 @WebServlet("/dettaglio")
@@ -30,8 +33,27 @@ public class ProdottoDettaglioServlet extends HttpServlet {
                 ProdottoDAO dao = new ProdottoDAO();
                 Prodotto prodotto = dao.doRetrieveById(idProdotto);
                 
-                // 4. Mettiamo il prodotto trovato nella request per mandarlo alla JSP
-                request.setAttribute("prodottoSingolo", prodotto);
+                if (prodotto != null) {
+                    // Fetch delle recensioni
+                    RecensioneDAO recDAO = new RecensioneDAO();
+                    List<Recensione> recensioni = recDAO.doRetrieveByProdotto(idProdotto);
+                    
+                    // Calcolo della media
+                    double mediaVoti = 0;
+                    if (!recensioni.isEmpty()) {
+                        int somma = 0;
+                        for (Recensione r : recensioni) {
+                            somma += r.getValutazione();
+                        }
+                        mediaVoti = (double) somma / recensioni.size();
+                    }
+                    
+                    request.setAttribute("prodottoSingolo", prodotto);
+                    request.setAttribute("listaRecensioni", recensioni);
+                    request.setAttribute("mediaVoti", mediaVoti);
+                } else {
+                    request.setAttribute("errore", "Prodotto non trovato.");
+                }
                 
             } catch (NumberFormatException e) {
                 // Se qualcuno manomette l'URL scrivendo lettere al posto del numero (es. dettaglio?id=ciao)

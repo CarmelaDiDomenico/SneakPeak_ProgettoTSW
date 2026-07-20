@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="sneakpeak.model.Prodotto" %>
+<%@ page import="sneakpeak.model.Recensione" %>
+<%@ page import="java.util.List" %>
+<%@ page import="sneakpeak.model.Utente" %>
 
 <!DOCTYPE html>
 <html>
@@ -90,6 +93,25 @@
             background-color: #32E012; /* Un verde leggermente più scuro per dare l'illusione di averlo premuto */
             box-shadow: 0px 4px 8px rgba(0,0,0,0.2); /* Aggiunge un'ombra morbida sotto il bottone (nero al 20% di trasparenza) */
         }
+        /* 7. STILI RECENSIONI */
+        .reviews-section {
+            width: 100%;
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .review-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stars {
+            color: #FFD700;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +122,17 @@
         // Recuperiamo il prodotto (o l'errore) che la Servlet ci ha mandato
         Prodotto p = (Prodotto) request.getAttribute("prodottoSingolo");
         String errore = (String) request.getAttribute("errore");
-
+        
+        List<Recensione> recensioni = null;
+        if (request.getAttribute("listaRecensioni") != null) {
+            recensioni = (List<Recensione>) request.getAttribute("listaRecensioni");
+        }
+        
+        double mediaVoti = 0.0;
+        if (request.getAttribute("mediaVoti") != null) {
+            mediaVoti = (Double) request.getAttribute("mediaVoti");
+        }
+        
         if (errore != null) {
             // Se c'è stato un problema (es. ID sbagliato)
     %>
@@ -123,6 +155,21 @@
                     <h2><%= p.getNome() %></h2>
                     <p class="product-brand"><%= p.getMarca() %></p>
                     
+                    <% if (recensioni != null && !recensioni.isEmpty()) { %>
+                        <div style="margin-top: -10px; margin-bottom: 15px;">
+                            <span class="stars">
+                                <% for (int sIdx = 1; sIdx <= 5; sIdx++) { %>
+                                    <%= (sIdx <= Math.round(mediaVoti)) ? "★" : "☆" %>
+                                <% } %>
+                            </span>
+                            <span style="color: #666; font-size: 0.9em; margin-left: 5px;">(<%= String.format("%.1f", mediaVoti) %> / 5 da <%= recensioni.size() %> recensioni)</span>
+                        </div>
+                    <% } else { %>
+                        <div style="margin-top: -10px; margin-bottom: 15px; color: #888; font-size: 0.9em;">
+                            Nessuna recensione (Sii il primo a recensire!)
+                        </div>
+                    <% } %>
+                    
                     <div class="product-price">€ <%= String.format("%.2f", p.getPrezzo() * 1.22) %></div>
                     <div style="font-size: 0.9em; color: #888; margin-top: -15px; margin-bottom: 20px;">
                         Imponibile: € <%= String.format("%.2f", p.getPrezzo()) %> + IVA (22%)
@@ -134,6 +181,73 @@
     <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
     <button type="submit" class="btn-add">Aggiungi al Carrello</button>
 </form>
+                </div>
+                
+                <!-- SEZIONE RECENSIONI -->
+                <div class="reviews-section">
+                    <h3>Recensioni dei Clienti</h3>
+                    
+                    <% if (request.getParameter("erroreRecensione") != null) { %>
+                        <div style="color: red; margin-bottom: 10px;"><%= request.getParameter("erroreRecensione") %></div>
+                    <% } %>
+                    <% if (request.getParameter("successoRecensione") != null) { %>
+                        <div style="color: green; margin-bottom: 10px;"><%= request.getParameter("successoRecensione") %></div>
+                    <% } %>
+                    
+                    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                        <div style="flex: 2; min-width: 300px;">
+                            <% if (recensioni == null || recensioni.isEmpty()) { %>
+                                <p style="color: #666;">Non ci sono ancora recensioni per questo prodotto.</p>
+                            <% } else { 
+                                for (Recensione r : recensioni) {
+                            %>
+                                <div class="review-card">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                        <span class="stars">
+                                            <% for (int rIdx = 1; rIdx <= 5; rIdx++) { %>
+                                                <%= (rIdx <= r.getValutazione()) ? "★" : "☆" %>
+                                            <% } %>
+                                        </span>
+                                        <span style="color: #888; font-size: 0.9em;"><%= r.getDataRecensione() %></span>
+                                    </div>
+                                    <h4 style="margin: 0 0 10px 0;"><%= r.getTitolo() %></h4>
+                                    <p style="margin: 0 0 10px 0; color: #444;"><%= r.getDescrizione() %></p>
+                                    <div style="font-size: 0.8em; color: #888;">Da: <%= r.getNomeUtente() %> <%= r.getCognomeUtente() %></div>
+                                </div>
+                            <%  }
+                               } %>
+                        </div>
+                        
+                        <!-- FORM RECENSIONE -->
+                        <div style="flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd; height: fit-content;">
+                            <h4 style="margin-top: 0;">Scrivi una recensione</h4>
+                            <% if (utenteLoggato != null) { %>
+                                <form action="aggiungiRecensione" method="POST">
+                                    <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
+                                    
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Valutazione:</label>
+                                    <select name="valutazione" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+                                        <option value="5">5 Stelle - Ottimo</option>
+                                        <option value="4">4 Stelle - Buono</option>
+                                        <option value="3">3 Stelle - Nella media</option>
+                                        <option value="2">2 Stelle - Scarso</option>
+                                        <option value="1">1 Stella - Pessimo</option>
+                                    </select>
+                                    
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Titolo:</label>
+                                    <input type="text" name="titolo" required maxlength="100" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                                    
+                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">La tua recensione:</label>
+                                    <textarea name="descrizione" required rows="4" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"></textarea>
+                                    
+                                    <button type="submit" style="background-color: #2F4F4F; color: white; border: none; padding: 10px 20px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold;">Invia Recensione</button>
+                                </form>
+                            <% } else { %>
+                                <p style="color: #666; font-size: 0.9em;">Devi effettuare l'accesso per poter lasciare una recensione.</p>
+                                <a href="login.jsp" style="display: block; text-align: center; background-color: #eee; color: #333; padding: 10px; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">Accedi</a>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
