@@ -3,94 +3,70 @@ package sneakpeak.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Carrello implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private List<Prodotto> articoli;
+    private List<CartItem> articoli;
 
     public Carrello() {
         articoli = new ArrayList<>();
     }
 
-    // Aggiunta di una scarpa al carrello
-    public void addProdotto(Prodotto p) {
-        articoli.add(p);
+    // Aggiunta di una scarpa al carrello con la taglia selezionata
+    public void addProdotto(Prodotto p, String taglia) {
+        // Cerca se esiste già la stessa scarpa con la STESSA taglia
+        Optional<CartItem> itemOpt = articoli.stream()
+                .filter(item -> item.getProdotto().getIdProdotto() == p.getIdProdotto() && item.getTaglia().equals(taglia))
+                .findFirst();
+
+        if (itemOpt.isPresent()) {
+            CartItem item = itemOpt.get();
+            item.setQuantita(item.getQuantita() + 1);
+        } else {
+            articoli.add(new CartItem(p, 1, taglia));
+        }
     }
 
-    // Rimozione di tutte le occorrenze di una scarpa dal carrello tramite ID
-    public void removeProdotto(int idProdotto) {
-        articoli.removeIf(p -> p.getIdProdotto() == idProdotto);
+    // Rimozione di un prodotto specifico per una certa taglia
+    public void removeProdotto(int idProdotto, String taglia) {
+        articoli.removeIf(item -> item.getProdotto().getIdProdotto() == idProdotto && item.getTaglia().equals(taglia));
     }
 
-    // Aggiornamento della quantità di un prodotto nel carrello
-    public void updateQuantita(int idProdotto, int nuovaQuantita) {
+    // Aggiornamento della quantità
+    public void updateQuantita(int idProdotto, String taglia, int nuovaQuantita) {
         if (nuovaQuantita <= 0) {
-            removeProdotto(idProdotto);
+            removeProdotto(idProdotto, taglia);
             return;
         }
 
-        // Calcoliamo la quantità attuale
-        int qtyAttuale = 0;
-        Prodotto protRef = null;
-        for (Prodotto p : articoli) {
-            if (p.getIdProdotto() == idProdotto) {
-                qtyAttuale++;
-                protRef = p;
-            }
-        }
-
-        if (protRef == null) {
-            return; // Il prodotto non è presente nel carrello
-        }
-
-        if (nuovaQuantita > qtyAttuale) {
-            // Aggiungiamo la differenza
-            int daAggiungere = nuovaQuantita - qtyAttuale;
-            for (int i = 0; i < daAggiungere; i++) {
-                articoli.add(protRef);
-            }
-        } else if (nuovaQuantita < qtyAttuale) {
-            // Rimuoviamo la differenza
-            int daRimuovere = qtyAttuale - nuovaQuantita;
-            int rimossi = 0;
-            for (int i = articoli.size() - 1; i >= 0; i--) {
-                if (articoli.get(i).getIdProdotto() == idProdotto) {
-                    articoli.remove(i);
-                    rimossi++;
-                    if (rimossi == daRimuovere) {
-                        break;
-                    }
-                }
-            }
-        }
+        articoli.stream()
+                .filter(item -> item.getProdotto().getIdProdotto() == idProdotto && item.getTaglia().equals(taglia))
+                .findFirst()
+                .ifPresent(item -> item.setQuantita(nuovaQuantita));
     }
 
-    // Lista di tutti i prodotti nel carrello
-    public List<Prodotto> getArticoli() {
+    public List<CartItem> getArticoli() {
         return articoli;
     }
 
-    // Somma dei prezzi netti di tutte le scarpe nel carrello
     public double getPrezzoNetto() {
         double totale = 0;
-        for (Prodotto p : articoli) {
-            totale += p.getPrezzo();
+        for (CartItem item : articoli) {
+            totale += (item.getProdotto().getPrezzo() * item.getQuantita());
         }
         return totale;
     }
 
-    // Calcolo dell'IVA al 22% sul totale netto
     public double getIva() {
         return getPrezzoNetto() * 0.22;
     }
 
-    // Prezzo Totale comprensivo di IVA
     public double getPrezzoTotale() {
         return getPrezzoNetto() + getIva();
     }
 
-    // Verifica se il carrello è vuoto
     public boolean isEmpty() {
         return articoli.isEmpty();
     }

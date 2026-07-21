@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="sneakpeak.model.Prodotto" %>
 <%@ page import="sneakpeak.model.Recensione" %>
+<%@ page import="sneakpeak.model.Variante" %>
 <%@ page import="java.util.List" %>
 <%@ page import="sneakpeak.model.Utente" %>
 
@@ -177,10 +178,31 @@
                     
                     <p class="product-desc"><%= p.getDescrizione() %></p>
                     
-                    <form action="aggiungiCarrello" method="POST">
-    <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
-    <button type="submit" class="btn-add">Aggiungi al Carrello</button>
-</form>
+                    <%
+                        List<Variante> varianti = p.getVarianti();
+                        if (varianti != null && !varianti.isEmpty() && p.getQuantitaTotale() > 0) {
+                    %>
+                        <form action="aggiungiCarrello" method="POST">
+                            <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
+                            
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Seleziona Taglia:</label>
+                            <select name="taglia" required style="padding: 10px; font-size: 1em; border-radius: 5px; border: 1px solid #ccc; width: 100%; margin-bottom: 15px;">
+                                <option value="">-- Scegli una taglia --</option>
+                                <% for (Variante v : varianti) { 
+                                    if (v.getQuantita() > 0) {
+                                %>
+                                    <option value="<%= v.getTaglia() %>">Taglia <%= v.getTaglia() %> (Disp: <%= v.getQuantita() %>)</option>
+                                <%  } 
+                                   } %>
+                            </select>
+                            
+                            <button type="submit" class="btn-add" style="width: 100%;">Aggiungi al Carrello</button>
+                        </form>
+                    <% } else { %>
+                        <div style="background-color: #ffcccc; color: #cc0000; padding: 15px; border-radius: 5px; text-align: center; font-weight: bold; margin-top: 15px;">
+                            Prodotto Esaurito
+                        </div>
+                    <% } %>
                 </div>
                 
                 <!-- SEZIONE RECENSIONI -->

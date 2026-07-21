@@ -21,6 +21,16 @@ CREATE TABLE PRODOTTO (
     FOREIGN KEY (id_categoria) REFERENCES CATEGORIA(id_categoria) ON DELETE SET NULL
 );
 
+-- 2.1 Tabella Variante Prodotto (Gestione Taglie e Quantità)
+CREATE TABLE VARIANTE_PRODOTTO (
+    id_variante INT AUTO_INCREMENT PRIMARY KEY,
+    id_prodotto INT NOT NULL,
+    taglia VARCHAR(5) NOT NULL,
+    quantita INT DEFAULT 0,
+    FOREIGN KEY (id_prodotto) REFERENCES PRODOTTO(id_prodotto) ON DELETE CASCADE,
+    UNIQUE(id_prodotto, taglia) -- Non ci possono essere due varianti con la stessa taglia per lo stesso prodotto
+);
+
 -- 3. Tabella Utente (Clienti e Amministratori)
 CREATE TABLE UTENTE (
     id_utente INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,14 +77,15 @@ CREATE TABLE ORDINE (
     FOREIGN KEY (id_pagamento) REFERENCES METODO_PAGAMENTO(id_pagamento) ON DELETE SET NULL
 );
 
--- 7. Tabella Dettaglio Ordine (Integrità storica: memorizza quantità, prezzo e iva bloccati al momento dell'acquisto)
+-- 7. Tabella Dettaglio Ordine (Integrità storica: memorizza quantità, prezzo, taglia)
 CREATE TABLE DETTAGLIO_ORDINE (
     id_ordine INT,
     id_prodotto INT,
+    taglia VARCHAR(5) NOT NULL, -- Memorizza la taglia acquistata
     quantita INT NOT NULL,
     prezzo_acquisto DECIMAL(10,2) NOT NULL, -- Prezzo di vendita in quel preciso istante
     iva_acquisto DECIMAL(5,2) DEFAULT 22.00, -- IVA applicata al momento dell'acquisto
-    PRIMARY KEY (id_ordine, id_prodotto),
+    PRIMARY KEY (id_ordine, id_prodotto, taglia),
     FOREIGN KEY (id_ordine) REFERENCES ORDINE(id_ordine) ON DELETE CASCADE,
     FOREIGN KEY (id_prodotto) REFERENCES PRODOTTO(id_prodotto) -- Mantiene il vincolo
 );

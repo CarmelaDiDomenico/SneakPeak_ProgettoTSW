@@ -23,6 +23,17 @@ INSERT INTO PRODOTTO (nome, descrizione, prezzo, marca, immagine, id_categoria) 
 ('Puma Suede Classic', 'Un classico intramontabile in pelle scamosciata per i più piccoli.', 60.00, 'Puma', 'img/puma-suede.jpeg', 4);
 
 -- ==========================================
+-- 3. POPOLAZIONE TABELLA VARIANTE_PRODOTTO
+-- ==========================================
+-- Inseriamo alcune taglie per i prodotti iniziali (id da 1 a 5)
+INSERT INTO VARIANTE_PRODOTTO (id_prodotto, taglia, quantita) VALUES 
+(1, '40', 5), (1, '41', 10), (1, '42', 15), (1, '43', 8), (1, '44', 3),
+(2, '41', 4), (2, '42', 6), (2, '42.5', 2), (2, '43', 5),
+(3, '38', 10), (3, '39', 12), (3, '40', 8), (3, '41', 5),
+(4, '42', 20), (4, '43', 15), (4, '44', 10), (4, '45', 5),
+(5, '28', 10), (5, '30', 10), (5, '32', 5), (5, '34', 8);
+
+-- ==========================================
 -- 3. POPOLAZIONE TABELLA UTENTE
 -- ==========================================
 -- NOTA SULLA PASSWORD: Le password nel database reale vanno salvate cifrate in SHA-256.

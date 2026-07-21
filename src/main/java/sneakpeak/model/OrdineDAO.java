@@ -45,31 +45,30 @@ public class OrdineDAO {
                 idNuovoOrdine = rsGeneratedKeys.getInt(1);
             }
             
-            // RAGGRUPPIAMO I PRODOTTI UGUALI PER CALCOLARE LE QUANTITÀ
-            Map<Integer, Integer> quantitaProdotti = new HashMap<>();
-            Map<Integer, Double> prezziProdotti = new HashMap<>();
-            
-            for (Prodotto p : carrello.getArticoli()) {
-                int idProd = p.getIdProdotto();
-                // Se il prodotto c'è già, aggiungiamo 1 alla quantità, altrimenti lo inseriamo a 1
-                quantitaProdotti.put(idProd, quantitaProdotti.getOrDefault(idProd, 0) + 1);
-                // Salviamo anche il suo prezzo
-                prezziProdotti.put(idProd, p.getPrezzo());
-            }
-            
-           
-            String insertDettaglio = "INSERT INTO DETTAGLIO_ORDINE (id_ordine, id_prodotto, quantita, prezzo_acquisto, iva_acquisto) VALUES (?, ?, ?, ?, ?)";
+            // SALVIAMO I DETTAGLI E SOTTRAIAMO LE SCORTE
+            String insertDettaglio = "INSERT INTO DETTAGLIO_ORDINE (id_ordine, id_prodotto, taglia, quantita, prezzo_acquisto, iva_acquisto) VALUES (?, ?, ?, ?, ?, ?)";
             psDettaglio = connection.prepareStatement(insertDettaglio);
             
-            for (Integer idProd : quantitaProdotti.keySet()) {
+            String updateStock = "UPDATE VARIANTE_PRODOTTO SET quantita = quantita - ? WHERE id_prodotto = ? AND taglia = ?";
+            PreparedStatement psStock = connection.prepareStatement(updateStock);
+            
+            for (CartItem item : carrello.getArticoli()) {
+                // Inserimento dettaglio
                 psDettaglio.setInt(1, idNuovoOrdine);
-                psDettaglio.setInt(2, idProd);
-                psDettaglio.setInt(3, quantitaProdotti.get(idProd)); 
-                psDettaglio.setDouble(4, prezziProdotti.get(idProd));
-                psDettaglio.setDouble(5, 22.00); // Fissiamo l'IVA storica per l'ordine al 22% come richiesto
-                
+                psDettaglio.setInt(2, item.getProdotto().getIdProdotto());
+                psDettaglio.setString(3, item.getTaglia());
+                psDettaglio.setInt(4, item.getQuantita()); 
+                psDettaglio.setDouble(5, item.getProdotto().getPrezzo());
+                psDettaglio.setDouble(6, 22.00); 
                 psDettaglio.executeUpdate();
+                
+                // Aggiornamento stock
+                psStock.setInt(1, item.getQuantita());
+                psStock.setInt(2, item.getProdotto().getIdProdotto());
+                psStock.setString(3, item.getTaglia());
+                psStock.executeUpdate();
             }
+            if (psStock != null) psStock.close();
             
             //FINE TRANSAZIONE
             connection.commit();
@@ -220,7 +219,7 @@ public class OrdineDAO {
         // prezzo_acquisto e iva_acquisto sono quelli storici salvati al momento dell'ordine.
         String selectSQL =
             "SELECT d.id_ordine, d.id_prodotto, p.nome AS nome_prodotto, " +
-            "       d.quantita, d.prezzo_acquisto, d.iva_acquisto " +
+            "       d.taglia, d.quantita, d.prezzo_acquisto, d.iva_acquisto " +
             "FROM DETTAGLIO_ORDINE d " +
             "JOIN PRODOTTO p ON d.id_prodotto = p.id_prodotto " +
             "WHERE d.id_ordine = ?";
@@ -236,6 +235,7 @@ public class OrdineDAO {
                 d.setIdOrdine(rs.getInt("id_ordine"));
                 d.setIdProdotto(rs.getInt("id_prodotto"));
                 d.setNomeProdotto(rs.getString("nome_prodotto"));
+                d.setTaglia(rs.getString("taglia"));
                 d.setQuantita(rs.getInt("quantita"));
                 d.setPrezzoAcquisto(rs.getDouble("prezzo_acquisto"));
                 d.setIvaAcquisto(rs.getDouble("iva_acquisto"));

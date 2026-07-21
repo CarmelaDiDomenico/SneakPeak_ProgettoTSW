@@ -41,6 +41,9 @@ public class ProdottoDAO {
                 p.setIdCategoria(resultSet.getInt("id_categoria"));
                 p.setImmagine(resultSet.getString("immagine"));
                 
+                VarianteDAO vDao = new VarianteDAO();
+                p.setVarianti(vDao.doRetrieveByProdotto(p.getIdProdotto()));
+                
                 prodotti.add(p);
             }
 
@@ -86,6 +89,10 @@ public class ProdottoDAO {
                 p.setIsDeleted(resultSet.getInt("is_deleted"));
                 p.setIdCategoria(resultSet.getInt("id_categoria"));
                 p.setImmagine(resultSet.getString("immagine"));
+                
+                VarianteDAO vDao = new VarianteDAO();
+                p.setVarianti(vDao.doRetrieveByProdotto(p.getIdProdotto()));
+                
                 prodotti.add(p);
             }
         } catch (SQLException e) {
@@ -128,6 +135,9 @@ public class ProdottoDAO {
                 p.setIsDeleted(resultSet.getInt("is_deleted"));
                 p.setIdCategoria(resultSet.getInt("id_categoria"));
                 p.setImmagine(resultSet.getString("immagine"));
+                
+                VarianteDAO vDao = new VarianteDAO();
+                p.setVarianti(vDao.doRetrieveByProdotto(p.getIdProdotto()));
             }
         } catch (SQLException e) {
             System.out.println("Errore in ProdottoDAO.doRetrieveById: " + e.getMessage());
@@ -202,6 +212,10 @@ public class ProdottoDAO {
                 p.setIdCategoria(rs.getInt("id_categoria"));
                 p.setIsDeleted(rs.getInt("is_deleted"));
                 p.setImmagine(rs.getString("immagine"));
+                
+                VarianteDAO vDao = new VarianteDAO();
+                p.setVarianti(vDao.doRetrieveByProdotto(p.getIdProdotto()));
+                
                 prodotti.add(p);
             }
         } catch (SQLException e) {

@@ -4,6 +4,7 @@ public class DettaglioOrdine {
     private int idOrdine;
     private int idProdotto;
     private String nomeProdotto;   // Recuperato via JOIN con PRODOTTO
+    private String taglia;         // <-- AGGIUNTO PER LE TAGLIE
     private int quantita;
     private double prezzoAcquisto;
     private double ivaAcquisto;
@@ -24,6 +25,11 @@ public class DettaglioOrdine {
     { return nomeProdotto; }
     public void setNomeProdotto(String nomeProdotto)
     { this.nomeProdotto = nomeProdotto; }
+
+    public String getTaglia()
+    { return taglia; }
+    public void setTaglia(String taglia)
+    { this.taglia = taglia; }
 
     public int getQuantita()
     { return quantita; }

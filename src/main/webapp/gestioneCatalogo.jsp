@@ -43,6 +43,7 @@
             <th>Marca</th>
             <th>Stato</th>
             <th>Modifica</th>
+            <th>Taglie</th>
             <th>Azione</th>
         </tr>
         
@@ -61,7 +62,11 @@
             </td>
 
             <td>
-                <a href="modificaProdotto?idProdotto=<%= p.getIdProdotto() %>" class="btn-update" style="text-decoration:none; display:inline-block;">✏️ Modifica Dettagli</a>
+                <a href="modificaProdotto?idProdotto=<%= p.getIdProdotto() %>" class="btn-update" style="text-decoration:none; display:inline-block;">✏️ Dettagli</a>
+            </td>
+
+            <td>
+                <a href="gestioneTaglie?idProdotto=<%= p.getIdProdotto() %>" class="btn-update" style="background-color: #5bc0de; text-decoration:none; display:inline-block;">📏 Taglie/Giacenze</a>
             </td>
 
             <td>

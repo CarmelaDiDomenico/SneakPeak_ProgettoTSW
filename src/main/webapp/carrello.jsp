@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="sneakpeak.model.Carrello" %>
+<%@ page import="sneakpeak.model.CartItem" %>
 <%@ page import="sneakpeak.model.Prodotto" %>
 
 <!DOCTYPE html>
@@ -165,6 +166,29 @@
 
     <h2 style="text-align:center; margin-top:30px;">Il tuo Carrello</h2>
 
+    <%
+        String erroreCarrello = (String) session.getAttribute("erroreCarrello");
+        String messaggioSuccesso = (String) session.getAttribute("messaggioSuccesso");
+        
+        if (erroreCarrello != null) {
+    %>
+        <div style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; max-width: 800px; margin: 20px auto; text-align: center;">
+            <strong>Attenzione!</strong> <%= erroreCarrello %>
+        </div>
+    <%
+            session.removeAttribute("erroreCarrello");
+        }
+        
+        if (messaggioSuccesso != null) {
+    %>
+        <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; max-width: 800px; margin: 20px auto; text-align: center;">
+            <%= messaggioSuccesso %>
+        </div>
+    <%
+            session.removeAttribute("messaggioSuccesso");
+        }
+    %>
+
     <div class="cart-wrapper">
         <%
             // Recuperiamo il carrello direttamente dalla sessione dell'utente
@@ -183,15 +207,10 @@
         %>
                 <div class="cart-items-list">
                     <%
-                        // Raggruppiamo gli articoli per calcolare la quantità e preservare l'ordine d'inserimento
-                        java.util.Map<Prodotto, Integer> articoliQuantita = new java.util.LinkedHashMap<>();
-                        for (Prodotto p : carrello.getArticoli()) {
-                            articoliQuantita.put(p, articoliQuantita.getOrDefault(p, 0) + 1);
-                        }
-
-                        for (java.util.Map.Entry<Prodotto, Integer> entry : articoliQuantita.entrySet()) {
-                            Prodotto p = entry.getKey();
-                            int qty = entry.getValue();
+                        for (CartItem item : carrello.getArticoli()) {
+                            Prodotto p = item.getProdotto();
+                            int qty = item.getQuantita();
+                            String taglia = item.getTaglia();
                     %>
                             <div class="cart-item-row">
                                 <div style="display: flex; align-items: center; flex-grow: 1;">
@@ -199,20 +218,21 @@
                                         <img src="<%= p.getImmagine() %>" alt="<%= p.getNome() %>" style="width: 80px; height: 80px; object-fit: contain; border-radius: 5px; border: 1px solid #ddd;">
                                     </div>
                                     <div class="item-info">
-                                        <h4 style="margin: 0 0 5px 0;"><%= p.getNome() %></h4>
+                                        <h4 style="margin: 0 0 5px 0;"><%= p.getNome() %> - Taglia <%= taglia %></h4>
                                         <p style="margin: 0; color: #666;">Marca: <%= p.getMarca() %></p>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center;">
                                     <form action="modificaCarrello" method="POST" style="display:flex; align-items:center; margin-right: 15px;">
                                         <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
-                                        <input type="hidden" id="hidden-qty-<%= p.getIdProdotto() %>" name="quantita" value="<%= qty %>">
-                                        <button type="button" class="btn-qty" <%= (qty <= 1) ? "disabled" : "" %> onclick="submitCartQty(<%= p.getIdProdotto() %>, <%= qty - 1 %>)">-</button>
-                                        <input type="number" min="1" class="qty-input" value="<%= qty %>" onchange="submitCartQty(<%= p.getIdProdotto() %>, this.value)">
-                                        <button type="button" class="btn-qty" onclick="submitCartQty(<%= p.getIdProdotto() %>, <%= qty + 1 %>)">+</button>
+                                        <input type="hidden" name="taglia" value="<%= taglia %>">
+                                        <input type="hidden" id="hidden-qty-<%= p.getIdProdotto() %>-<%= taglia %>" name="quantita" value="<%= qty %>">
+                                        <button type="button" class="btn-qty" <%= (qty <= 1) ? "disabled" : "" %> onclick="submitCartQty(<%= p.getIdProdotto() %>, '<%= taglia %>', <%= qty - 1 %>)">-</button>
+                                        <input type="number" min="1" class="qty-input" value="<%= qty %>" onchange="submitCartQty(<%= p.getIdProdotto() %>, '<%= taglia %>', this.value)">
+                                        <button type="button" class="btn-qty" onclick="submitCartQty(<%= p.getIdProdotto() %>, '<%= taglia %>', <%= qty + 1 %>)">+</button>
                                     </form>
                                     <span class="item-price">€ <%= String.format("%.2f", p.getPrezzo() * qty) %></span>
-                                    <a href="rimuoviCarrello?id=<%= p.getIdProdotto() %>" class="btn-remove">Rimuovi</a>
+                                    <a href="rimuoviCarrello?id=<%= p.getIdProdotto() %>&taglia=<%= taglia %>" class="btn-remove">Rimuovi</a>
                                 </div>
                             </div>
                     <%
@@ -250,8 +270,8 @@
     <%@ include file="footer.jsp" %>
 
     <script>
-        function submitCartQty(id, val) {
-            var hiddenInput = document.getElementById("hidden-qty-" + id);
+        function submitCartQty(id, taglia, val) {
+            var hiddenInput = document.getElementById("hidden-qty-" + id + "-" + taglia);
             if (hiddenInput) {
                 var intVal = parseInt(val);
                 if (!isNaN(intVal) && intVal >= 1) {
@@ -259,7 +279,7 @@
                     hiddenInput.form.submit();
                 } else if (intVal === 0) {
                     // Se si imposta la quantità a 0, si reindirizza alla rimozione dell'articolo
-                    window.location.href = "rimuoviCarrello?id=" + id;
+                    window.location.href = "rimuoviCarrello?id=" + id + "&taglia=" + taglia;
                 }
             }
         }

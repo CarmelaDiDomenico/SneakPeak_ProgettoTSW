@@ -17,8 +17,9 @@ public class ModificaCarrelloServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idString = request.getParameter("id");
         String qtyString = request.getParameter("quantita");
+        String taglia = request.getParameter("taglia");
         
-        if (idString != null && qtyString != null) {
+        if (idString != null && qtyString != null && taglia != null) {
             try {
                 int idProdotto = Integer.parseInt(idString);
                 int quantita = Integer.parseInt(qtyString);
@@ -27,8 +28,24 @@ public class ModificaCarrelloServlet extends HttpServlet {
                 Carrello carrello = (Carrello) session.getAttribute("carrello");
                 
                 if (carrello != null) {
-                    carrello.updateQuantita(idProdotto, quantita);
-                    session.setAttribute("messaggioSuccesso", "Quantità aggiornata con successo!");
+                    sneakpeak.model.ProdottoDAO dao = new sneakpeak.model.ProdottoDAO();
+                    sneakpeak.model.Prodotto prodotto = dao.doRetrieveById(idProdotto);
+                    
+                    if (prodotto != null) {
+                        sneakpeak.model.Variante var = prodotto.getVarianti().stream()
+                            .filter(v -> v.getTaglia().equals(taglia))
+                            .findFirst().orElse(null);
+                            
+                        if (var != null) {
+                            if (quantita <= var.getQuantita()) {
+                                carrello.updateQuantita(idProdotto, taglia, quantita);
+                                session.setAttribute("messaggioSuccesso", "Quantità aggiornata con successo!");
+                            } else {
+                                carrello.updateQuantita(idProdotto, taglia, var.getQuantita());
+                                session.setAttribute("erroreCarrello", "Hai richiesto più unità di quante disponibili. Quantità impostata al massimo disponibile (" + var.getQuantita() + ").");
+                            }
+                        }
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Errore formato parametri in ModificaCarrelloServlet: " + e.getMessage());

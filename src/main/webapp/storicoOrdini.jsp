@@ -255,7 +255,7 @@
                                         totaleCalcolato += d.getSubtotale();
                                 %>
                                 <tr>
-                                    <td><strong><%= d.getNomeProdotto() %></strong></td>
+                                    <td><strong><%= d.getNomeProdotto() %> (Tg. <%= d.getTaglia() %>)</strong></td>
                                     <td style="text-align:center;"><%= d.getQuantita() %></td>
                                     <td class="num">€ <%= String.format("%.2f", d.getPrezzoLordo()) %></td>
                                     <td class="num"><strong>€ <%= String.format("%.2f", d.getSubtotale()) %></strong></td>

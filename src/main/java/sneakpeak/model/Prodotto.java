@@ -1,6 +1,8 @@
 package sneakpeak.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Prodotto implements Serializable {
     private static final long serialVersionUID = 1L; 
@@ -14,10 +16,33 @@ public class Prodotto implements Serializable {
     private int isDeleted;
     private int idCategoria;
     private String immagine;
+    
+    // Lista delle varianti (taglie e quantità) associate al prodotto
+    private List<Variante> varianti = new ArrayList<>();
 
     // Costruttore vuoto di default
     public Prodotto() {
     }
+
+    // Metodo di utilità per calcolare la quantità totale
+    public int getQuantitaTotale() {
+        int tot = 0;
+        if (varianti != null) {
+            for (Variante v : varianti) {
+                tot += v.getQuantita();
+            }
+        }
+        return tot;
+    }
+
+    public List<Variante> getVarianti() {
+        return varianti;
+    }
+
+    public void setVarianti(List<Variante> varianti) {
+        this.varianti = varianti;
+    }
+
 
     // Metodi Getter e Setter
 

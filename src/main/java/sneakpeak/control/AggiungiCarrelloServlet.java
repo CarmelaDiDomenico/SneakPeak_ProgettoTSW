@@ -21,8 +21,9 @@ public class AggiungiCarrelloServlet extends HttpServlet {
         
         // 1. Leggiamo l'ID del prodotto inviato dal bottone/form
         String idString = request.getParameter("id");
+        String taglia = request.getParameter("taglia");
         
-        if (idString != null) {
+        if (idString != null && taglia != null && !taglia.trim().isEmpty()) {
             try {
                 int idProdotto = Integer.parseInt(idString);
                 
@@ -44,9 +45,29 @@ public class AggiungiCarrelloServlet extends HttpServlet {
                         session.setAttribute("carrello", carrello);
                     }
                     
-                    // 5. Inseriamo la scarpa nel carrello
-                    carrello.addProdotto(prodotto);
-                    session.setAttribute("messaggioSuccesso", "Prodotto aggiunto al carrello con successo!");
+                    // 5. Controlliamo se ci sono abbastanza scorte per aggiungere un'altra unità
+                    sneakpeak.model.Variante var = prodotto.getVarianti().stream()
+                        .filter(v -> v.getTaglia().equals(taglia))
+                        .findFirst().orElse(null);
+                        
+                    if (var != null) {
+                        int currentQty = 0;
+                        for (sneakpeak.model.CartItem item : carrello.getArticoli()) {
+                            if (item.getProdotto().getIdProdotto() == idProdotto && item.getTaglia().equals(taglia)) {
+                                currentQty = item.getQuantita();
+                                break;
+                            }
+                        }
+                        
+                        if (currentQty + 1 <= var.getQuantita()) {
+                            carrello.addProdotto(prodotto, taglia);
+                            session.setAttribute("messaggioSuccesso", "Prodotto aggiunto al carrello con successo!");
+                        } else {
+                            session.setAttribute("erroreCarrello", "Non puoi aggiungere altre unità, giacenza massima raggiunta per questa taglia!");
+                        }
+                    } else {
+                        session.setAttribute("erroreCarrello", "Variante non trovata.");
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Errore formato ID nel carrello: " + e.getMessage());

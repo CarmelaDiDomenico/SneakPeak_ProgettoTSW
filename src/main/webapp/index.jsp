@@ -48,10 +48,9 @@
                         <p style="margin-top: -5px;">Marca: <%= p.getMarca() %></p>
                         <p class="prezzo">€ <%= String.format("%.2f", p.getPrezzo() * 1.22) %></p>
                         
-                        <form action="aggiungiCarrello" method="POST">
-    <input type="hidden" name="id" value="<%= p.getIdProdotto() %>">
-    <button type="submit" class="btn-carrello">Aggiungi al Carrello</button>
-</form>
+                        <a href="dettaglio?id=<%= p.getIdProdotto() %>" style="text-decoration: none;">
+                            <button class="btn-carrello" style="background-color: #2F4F4F; color: white;">Scegli Taglia</button>
+                        </a>
                     </div>
         <%
                 }
