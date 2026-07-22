@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="sneakpeak.model.Ordine" %>
+<%@ page import="sneakpeak.model.DettaglioOrdine" %>
 <%@ page import="sneakpeak.model.Utente" %>
 
 <%
@@ -12,6 +15,7 @@
     }
 
     List<Ordine> listaOrdini = (List<Ordine>) request.getAttribute("listaOrdini");
+    Map<Integer, List<DettaglioOrdine>> dettagliPerOrdine = (Map<Integer, List<DettaglioOrdine>>) request.getAttribute("dettagliPerOrdine");
 %>
 
 <!DOCTYPE html>
@@ -26,6 +30,104 @@
         th { background-color: #333; color: white; }
         .btn-update { background-color: #5cb85c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
         .badge-stato { padding: 5px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; color: white; }
+        .btn-print { background-color: #333; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 10px; }
+
+        /* =========================================
+           STILI PER AREA DI STAMPA FATTURE 
+           (Copiati da storicoOrdini.jsp per identicità)
+           ========================================= */
+        #print-area { display: none; }
+        
+        .ordine-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            break-inside: avoid;
+        }
+        .ordine-header {
+            background-color: #f8f8f8;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .order-id { font-weight: bold; font-size: 1.1em; color: #337ab7; }
+        .order-meta { color: #555; font-size: 0.9em; }
+        .ordine-body { padding: 20px; display: block; }
+        
+        .tabella-prodotti {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        .tabella-prodotti th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .tabella-prodotti td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        .tabella-prodotti tr:last-child td { border-bottom: none; }
+        .tabella-prodotti td.num { text-align: right; }
+        
+        .ordine-summary {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 12px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .ordine-summary .totale-finale {
+            font-weight: bold;
+            font-size: 1.05em;
+            color: #2F4F4F;
+        }
+
+        @media print {
+            @page { margin: 0; }
+            body { margin: 0; padding: 0; background: white; color: black; }
+            .nav, .header p, footer, .toast-banner, form:not(.print-keep), .btn-update, .btn-print, .table-responsive { display: none !important; }
+            
+            body.print-single-mode > div:not(#print-area):not(.header) { display: none !important; }
+            body.print-single-mode #print-area { display: block !important; }
+            body.print-single-mode .ordine-card:not(.print-active) { display: none !important; }
+            
+            #print-area .container { 
+                width: 100%; margin: 0; padding: 1.5cm !important; 
+                box-sizing: border-box; box-shadow: none; border-radius: 0; 
+            }
+            
+            #print-area .container::before {
+                content: "Ricevuta Ordine — SneakPeak";
+                display: block;
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 15px;
+                text-align: center;
+                border-bottom: 2px solid black;
+                padding-bottom: 10px;
+            }
+            
+            .ordine-card { border: 1px solid #aaa !important; margin-bottom: 20px; break-inside: avoid; }
+            .ordine-header { background-color: #eee !important; color: black !important; }
+            .tabella-prodotti th { background-color: #ddd; }
+            .tabella-prodotti th, .tabella-prodotti td { border: 1px solid #aaa !important; color: black !important; }
+            .stato-badge { border: 1px solid #aaa; color: black !important; background-color: transparent !important; }
+        }
     </style>
 </head>
 <body>
@@ -74,6 +176,7 @@
                 <th>Totale</th>
                 <th>Stato Attuale</th>
                 <th>Aggiorna Stato Spedizione</th>
+                <th>Dettagli Prodotti</th>
             </tr>
             
             <% for (Ordine o : listaOrdini) { 
@@ -83,9 +186,16 @@
                 if ("Consegnato".equalsIgnoreCase(o.getStato())) coloreBadge = "#5cb85c"; // Verde
                 if ("Annullato".equalsIgnoreCase(o.getStato())) coloreBadge = "#d9534f"; // Rosso
             %>
-            <tr>
+            <tr class="order-row" id="row-<%= o.getIdOrdine() %>">
                 <td><strong>#<%= o.getIdOrdine() %></strong></td>
-                <td><%= o.getDataOrdine() %></td>
+                <%
+                    String dataFormattata = "";
+                    if (o.getDataOrdine() != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                        dataFormattata = sdf.format(o.getDataOrdine());
+                    }
+                %>
+                <td><%= dataFormattata %></td>
                 <td>
                     <strong><%= o.getNomeCliente() != null ? o.getNomeCliente() : "—" %></strong><br>
                     <span style="font-size:12px; color:#777;"><%= o.getEmailCliente() != null ? o.getEmailCliente() : "" %></span>
@@ -112,11 +222,129 @@
                         <button type="submit" class="btn-update">Aggiorna</button>
                     </form>
                 </td>
+                <td>
+                    <button type="button" class="btn-update" style="background-color: #5bc0de; font-size: 12px; padding: 4px 8px;" onclick="document.getElementById('dett-<%= o.getIdOrdine() %>').style.display = document.getElementById('dett-<%= o.getIdOrdine() %>').style.display === 'none' ? 'table-row' : 'none'">Vedi Prodotti</button>
+                </td>
+            </tr>
+            
+            <tr class="details-row" id="dett-<%= o.getIdOrdine() %>" style="display:none; background-color: #f9f9f9;">
+                <td colspan="7" style="text-align: left; padding: 15px; border-bottom: 2px solid #ccc;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong style="color: #333;">📦 Prodotti acquistati in questo ordine:</strong>
+                        <button type="button" class="btn-print" onclick="printSingleOrderAdmin(<%= o.getIdOrdine() %>)">🖨️ Stampa Ricevuta</button>
+                    </div>
+                    <ul style="list-style-type: none; padding: 0; margin: 0;">
+                        <% 
+                        List<DettaglioOrdine> detts = (dettagliPerOrdine != null) ? dettagliPerOrdine.get(o.getIdOrdine()) : null;
+                        if (detts != null && !detts.isEmpty()) {
+                            for (DettaglioOrdine d : detts) {
+                        %>
+                            <li style="padding: 5px 0; border-bottom: 1px solid #ddd; font-size: 14px;">
+                                👟 <strong><%= d.getNomeProdotto() %></strong> 
+                                (Taglia: <strong><%= d.getTaglia() %></strong>) 
+                                &nbsp;|&nbsp; Qtà: <strong><%= d.getQuantita() %></strong> 
+                                &nbsp;|&nbsp; Prezzo unitario (IVA incl.): € <%= String.format("%.2f", d.getPrezzoLordo()) %>
+                            </li>
+                        <%  } 
+                        } else { %>
+                            <li style="padding: 5px 0; font-style: italic; color: #777;">Nessun dettaglio disponibile per questo ordine.</li>
+                        <% } %>
+                    </ul>
+                </td>
             </tr>
             <% } %>
             </table>
         </div>
     <% } %>
 
+    <!-- AREA STAMPA FATTURE (Nascosta a schermo, visibile solo in stampa tramite JS) -->
+    <div id="print-area">
+        <div class="container">
+    <% if (listaOrdini != null) {
+        for (Ordine o : listaOrdini) { 
+            String dataF = "";
+            if (o.getDataOrdine() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                dataF = sdf.format(o.getDataOrdine());
+            }
+            List<DettaglioOrdine> detts = (dettagliPerOrdine != null) ? dettagliPerOrdine.get(o.getIdOrdine()) : null;
+            
+            String colore = "#f0ad4e";
+            String stato = (o.getStato() != null) ? o.getStato() : "In elaborazione";
+            if ("Spedito".equalsIgnoreCase(stato))     colore = "#337ab7";
+            if ("Consegnato".equalsIgnoreCase(stato))  colore = "#5cb85c";
+            if ("Annullato".equalsIgnoreCase(stato))   colore = "#d9534f";
+    %>
+            <div class="ordine-card" id="fattura-<%= o.getIdOrdine() %>">
+                <div class="ordine-header">
+                    <span class="order-id"># <%= o.getIdOrdine() %></span>
+                    <span class="order-meta">📅 <%= dataF %></span>
+                    <span class="order-meta" style="margin-left: 10px;">👤 <%= o.getNomeCliente() != null ? o.getNomeCliente() : "—" %></span>
+                    <span class="stato-badge" style="background-color: <%= colore %>"><%= stato %></span>
+                    <span class="order-meta">Totale: <strong>€ <%= String.format("%.2f", o.getTotale()) %></strong></span>
+                </div>
+                <div class="ordine-body">
+                    <% if (detts != null && !detts.isEmpty()) { %>
+                        <table class="tabella-prodotti">
+                            <thead>
+                                <tr>
+                                    <th>Prodotto</th>
+                                    <th style="text-align:center;">Qtà</th>
+                                    <th style="text-align:right;">Prezzo unitario (IVA incl.)</th>
+                                    <th style="text-align:right;">Subtotale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                    double totaleCalcolato = 0;
+                                    for (DettaglioOrdine d : detts) {
+                                        totaleCalcolato += d.getSubtotale();
+                                %>
+                                <tr>
+                                    <td><strong><%= d.getNomeProdotto() %> (Tg. <%= d.getTaglia() %>)</strong></td>
+                                    <td style="text-align:center;"><%= d.getQuantita() %></td>
+                                    <td class="num">€ <%= String.format("%.2f", d.getPrezzoLordo()) %></td>
+                                    <td class="num"><strong>€ <%= String.format("%.2f", d.getSubtotale()) %></strong></td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        
+                        <div class="ordine-summary">
+                            <span>IVA inclusa (<%= String.format("%.0f", detts.get(0).getIvaAcquisto()) %>%)</span>
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                                <span class="totale-finale">Totale ordine: € <%= String.format("%.2f", totaleCalcolato) %></span>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <p style="padding: 15px; color: #777;">Nessun dettaglio disponibile per questo ordine.</p>
+                    <% } %>
+                </div>
+            </div>
+    <% } } %>
+        </div>
+    </div>
+
+    <jsp:include page="footer.jsp" />
+    
+    <script>
+        function printSingleOrderAdmin(idOrdine) {
+            // Salva il titolo originale per rimetterlo dopo
+            var originalTitle = document.title;
+            // Imposta il titolo identico a quello dello storico (che diventa il nome del file PDF)
+            document.title = "Storico Ordini - SneakPeak";
+            
+            document.body.classList.add('print-single-mode');
+            var fattura = document.getElementById('fattura-' + idOrdine);
+            if(fattura) fattura.classList.add('print-active');
+            
+            window.print();
+            
+            // Ripristina tutto dopo la stampa
+            document.title = originalTitle;
+            document.body.classList.remove('print-single-mode');
+            if(fattura) fattura.classList.remove('print-active');
+        }
+    </script>
 </body>
 </html>

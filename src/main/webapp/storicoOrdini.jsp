@@ -19,9 +19,10 @@
     <title>Storico Ordini - SneakPeak</title>
     <style>
         .container {
-            width: 85%;
+            width: 100%;
+            box-sizing: border-box;
             max-width: 1000px;
-            margin: 30px auto;
+            margin: 40px auto;
             background-color: #f9f9f9;
             padding: 30px;
             border-radius: 8px;
@@ -166,18 +167,39 @@
 
         /* --- STILI PER LA STAMPA --- */
         @media print {
-            body { background-color: white; color: black; }
-            .container { width: 100%; margin: 0; padding: 0; box-shadow: none; border-radius: 0; }
-            .back-btn, .btn-print, .nav, .header p, .footer, .toast-banner { display: none !important; }
-            .section-title { border-bottom: 2px solid black; color: black; }
-            /* Mostra TUTTE le card aperte in stampa */
+            @page { margin: 0; } /* Rimuove header/footer del browser (Data, URL) */
+            body { 
+                background-color: white; 
+                color: black; 
+                margin: 0; 
+                padding: 0; 
+            }
+            .container { 
+                width: 100%; 
+                margin: 0; 
+                padding: 1.5cm !important; /* Diamo spazio ai bordi fisici del foglio */
+                box-sizing: border-box;
+                box-shadow: none; 
+                border-radius: 0; 
+            }
+            .back-btn, .btn-print, .nav, .header p, .footer, .toast-banner, .section-title { display: none !important; }
+            
+            /* Di default stampa tutto lo storico */
+            .ordine-card { display: block; break-inside: avoid; margin-bottom: 20px; border: 1px solid #aaa; }
+            
+            /* SE stiamo stampando un singolo ordine tramite JS, nascondi tutte le altre card */
+            body.print-single-mode .ordine-card:not(.print-active) { display: none !important; }
+            
+            /* Mostra TUTTE le card aperte in stampa (se non siamo in single-mode, apri tutto; se siamo in single-mode l'unica visibile sarà già aperta) */
             .ordine-body { display: block !important; }
+            
             .ordine-header { background-color: #eee !important; color: black !important; cursor: default; }
             .toggle-icon { display: none; }
             .tabella-prodotti th { background-color: #ddd; }
-            .tabella-prodotti th, .tabella-prodotti td { border: 1px solid #aaa; }
+            .tabella-prodotti th, .tabella-prodotti td { border: 1px solid #aaa !important; }
             .stato-badge { border: 1px solid #aaa; color: black !important; background-color: transparent !important; }
-            /* Intestazione fattura */
+            
+            /* Intestazione fattura dinamica */
             .container::before {
                 content: "Storico Acquisti — SneakPeak";
                 display: block;
@@ -187,6 +209,9 @@
                 text-align: center;
                 border-bottom: 2px solid black;
                 padding-bottom: 10px;
+            }
+            body.print-single-mode .container::before {
+                content: "Ricevuta Ordine — SneakPeak";
             }
         }
     </style>
@@ -266,7 +291,10 @@
 
                         <div class="ordine-summary">
                             <span>IVA inclusa (<%= String.format("%.0f", dettagli.get(0).getIvaAcquisto()) %>%)</span>
-                            <span class="totale-finale">Totale ordine: € <%= String.format("%.2f", o.getTotale()) %></span>
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                                <span class="totale-finale">Totale ordine: € <%= String.format("%.2f", o.getTotale()) %></span>
+                                <button type="button" class="btn-print" style="margin-top: 5px; font-size: 14px;" onclick="printSingleOrder(<%= cardIndex %>)">🖨️ Stampa questa Ricevuta</button>
+                            </div>
                         </div>
                     <% } else { %>
                         <p style="color: #888; font-style: italic;">Nessun dettaglio disponibile per questo ordine.</p>
@@ -304,6 +332,40 @@
                 firstBody.classList.add('open');
             }
         });
+        function printSingleOrder(cardIndex) {
+            // Aggiungi classe al body per avviare il css print-single-mode
+            document.body.classList.add('print-single-mode');
+            
+            // Trova la card target e aggiungi print-active
+            var allCards = document.querySelectorAll('.ordine-card');
+            var targetCard = allCards[cardIndex - 1]; // cardIndex parte da 1
+            if(targetCard) {
+                targetCard.classList.add("print-active");
+            }
+            
+            // Assicuriamoci che il body dell'ordine sia aperto
+            var body = document.getElementById('body-' + cardIndex);
+            var header = document.getElementById('header-' + cardIndex);
+            
+            var wasClosed = !body.classList.contains('open');
+            if(wasClosed) {
+                body.classList.add('open');
+                header.classList.add('open');
+            }
+
+            // Manda in stampa
+            window.print();
+            
+            // Ripristina tutto alla normalità
+            document.body.classList.remove('print-single-mode');
+            if(targetCard) {
+                targetCard.classList.remove("print-active");
+            }
+            if(wasClosed) {
+                body.classList.remove('open');
+                header.classList.remove('open');
+            }
+        }
     </script>
 
 </body>
