@@ -60,6 +60,9 @@ public class GestioneCatalogoServlet extends HttpServlet {
         else if ("riattiva".equals(action)) { 
             dao.riattivaProdotto(idProdotto);
         }
+        else if ("eliminaFisicamente".equals(action)) {
+            dao.deleteProdotto(idProdotto);
+        }
 
         // Ricarica la pagina 
         response.sendRedirect("gestioneCatalogo");

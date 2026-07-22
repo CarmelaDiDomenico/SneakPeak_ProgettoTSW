@@ -293,6 +293,27 @@ public class ProdottoDAO {
         }
     }
 
+    // Elimina fisicamente un prodotto dal DB
+    public boolean deleteProdotto(int idProdotto) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String deleteSQL = "DELETE FROM PRODOTTO WHERE id_prodotto = ?";
+        
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(deleteSQL);
+            ps.setInt(1, idProdotto);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+    }
+
     // Nasconde un prodotto 
     public boolean nascondiProdotto(int idProdotto) {
         Connection connection = null;

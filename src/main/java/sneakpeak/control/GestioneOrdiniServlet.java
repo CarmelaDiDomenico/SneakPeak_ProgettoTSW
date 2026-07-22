@@ -1,7 +1,9 @@
 package sneakpeak.control;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import sneakpeak.model.DettaglioOrdine;
 import sneakpeak.model.Ordine;
 import sneakpeak.model.OrdineDAO;
 import sneakpeak.model.Utente;
@@ -69,7 +72,16 @@ public class GestioneOrdiniServlet extends HttpServlet {
             listaOrdini = dao.doRetrieveAll();
         }
         
+        Map<Integer, List<DettaglioOrdine>> dettagliPerOrdine = new LinkedHashMap<>();
+        if (listaOrdini != null) {
+            for (Ordine o : listaOrdini) {
+                List<DettaglioOrdine> dettagli = dao.doRetrieveDettagliByOrdine(o.getIdOrdine());
+                dettagliPerOrdine.put(o.getIdOrdine(), dettagli);
+            }
+        }
+        
         request.setAttribute("listaOrdini", listaOrdini);
+        request.setAttribute("dettagliPerOrdine", dettagliPerOrdine);
         RequestDispatcher dispatcher = request.getRequestDispatcher("gestioneOrdini.jsp");
         dispatcher.forward(request, response);
     }
