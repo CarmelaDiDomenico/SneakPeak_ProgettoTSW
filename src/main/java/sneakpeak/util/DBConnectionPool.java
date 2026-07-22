@@ -17,7 +17,7 @@ public class DBConnectionPool {
     private static List<Connection> freeDbConnections;
 
     // Stringa di connessione JDBC per MySQL con fuso orario UTC configurato
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/sneakpeak?serverTimezone=UTC";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/sneakpeak?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8";
     private static final String DB_USER = "root";       
     private static final String DB_PASSWORD = "";   
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
