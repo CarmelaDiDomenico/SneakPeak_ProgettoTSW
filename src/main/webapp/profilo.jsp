@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="sneakpeak.model.Utente" %>
 <%@ page import="sneakpeak.model.Indirizzo" %>
+<%@ page import="sneakpeak.model.MetodoPagamento" %>
 <%@ page import="java.util.List" %>
 <%
     // Sicurezza: blocchiamo gli accessi diretti alla pagina senza login
@@ -17,8 +18,10 @@
     <title>Il tuo Profilo - SneakPeak</title>
     <style>
         .container {
-            width: 80%;
-            margin: 20px auto;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+            margin: 40px auto;
             background-color: #f9f9f9;
             padding: 30px;
             border-radius: 8px;
@@ -141,10 +144,14 @@
             if (indirizzi != null && !indirizzi.isEmpty()) {
                 for (Indirizzo ind : indirizzi) {
         %>
-            <div class="indirizzo-card">
+            <div class="indirizzo-card" style="position: relative;">
                 <p><strong>Via/Piazza:</strong> <%= ind.getVia() %> <%= ind.getCivico() %></p>
                 <p><strong>Città:</strong> <%= ind.getCitta() %> (<%= ind.getProvincia() %>) - <%= ind.getCap() %></p>
                 <p><strong>Nazione:</strong> <%= ind.getNazione() %></p>
+                <form action="eliminaIndirizzo" method="POST" style="position: absolute; top: 15px; right: 15px;" onsubmit="requireConfirm(event, 'Vuoi davvero eliminare questo indirizzo?');">
+                    <input type="hidden" name="idIndirizzo" value="<%= ind.getIdIndirizzo() %>">
+                    <button type="submit" style="background-color: transparent; color: #d9534f; border: 1px solid #d9534f; padding: 5px 10px; font-size: 12px;">Elimina</button>
+                </form>
             </div>
         <%
                 }
@@ -169,25 +176,52 @@
                 </div>
                 <div style="flex: 1 1 45%; min-width: 200px;">
                     <label>Città:</label>
-                    <input type="text" name="citta" required style="width: 100%; padding: 8px;">
+                    <input type="text" name="citta" required style="width: 100%; padding: 8px; box-sizing: border-box;" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo lettere">
                 </div>
                 <div style="flex: 1 1 45%; min-width: 100px;">
                     <label>CAP:</label>
-                    <input type="text" name="cap" required style="width: 100%; padding: 8px;">
+                    <input type="text" name="cap" required style="width: 100%; padding: 8px; box-sizing: border-box;" maxlength="5" pattern="\d{5}" title="Il CAP deve essere di 5 numeri">
                 </div>
                 <div style="flex: 1 1 45%; min-width: 200px;">
                     <label>Provincia (Es. MI):</label>
-                    <input type="text" name="provincia" required style="width: 100%; padding: 8px;">
+                    <input type="text" name="provincia" required style="width: 100%; padding: 8px; box-sizing: border-box;" maxlength="2" pattern="[A-Za-z]{2}" title="La provincia deve essere di 2 lettere (es. NA, MI)">
                 </div>
                 <div style="flex: 1 1 45%; min-width: 200px;">
                     <label>Nazione:</label>
-                    <input type="text" name="nazione" required style="width: 100%; padding: 8px;">
+                    <input type="text" name="nazione" required style="width: 100%; padding: 8px; box-sizing: border-box;" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo lettere">
                 </div>
                 <div style="flex: 1 1 100%; margin-top: 10px;">
                     <button type="submit" style="width: 100%; background-color: #337ab7; color: white;">Aggiungi Indirizzo</button>
                 </div>
             </form>
         </div>
+
+        <br><br>
+
+        <h2 class="section-title">I Tuoi Metodi di Pagamento</h2>
+        
+        <%
+            List<MetodoPagamento> pagamenti = (List<MetodoPagamento>) request.getAttribute("listaPagamenti");
+            if (pagamenti != null && !pagamenti.isEmpty()) {
+                for (MetodoPagamento pag : pagamenti) {
+        %>
+            <div class="indirizzo-card" style="position: relative;">
+                <p><strong>Intestatario:</strong> <%= pag.getIntestatario() %></p>
+                <p><strong>Tipo:</strong> <%= pag.getTipo() %></p>
+                <form action="eliminaPagamento" method="POST" style="position: absolute; top: 15px; right: 15px;" onsubmit="requireConfirm(event, 'Vuoi davvero eliminare questo metodo di pagamento?');">
+                    <input type="hidden" name="idPagamento" value="<%= pag.getIdPagamento() %>">
+                    <button type="submit" style="background-color: transparent; color: #d9534f; border: 1px solid #d9534f; padding: 5px 10px; font-size: 12px;">Elimina</button>
+                </form>
+            </div>
+        <%
+                }
+            } else {
+        %>
+            <p>Non hai salvato nessun metodo di pagamento.</p>
+        <%
+            }
+        %>
+
 
         <!-- Pulsante "Torna allo Storico Ordini" -->
         <br>

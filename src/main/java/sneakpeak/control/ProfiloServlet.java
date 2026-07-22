@@ -36,8 +36,12 @@ public class ProfiloServlet extends HttpServlet {
         IndirizzoDAO indirizzoDAO = new IndirizzoDAO();
         List<Indirizzo> listaIndirizzi = indirizzoDAO.doRetrieveByUtente(utente.getIdUtente());
         
-        // Passiamo la lista alla JSP
+        sneakpeak.model.MetodoPagamentoDAO pagamentoDAO = new sneakpeak.model.MetodoPagamentoDAO();
+        List<sneakpeak.model.MetodoPagamento> listaPagamenti = pagamentoDAO.doRetrieveByUtente(utente.getIdUtente());
+        
+        // Passiamo le liste alla JSP
         request.setAttribute("listaIndirizzi", listaIndirizzi);
+        request.setAttribute("listaPagamenti", listaPagamenti);
         
         RequestDispatcher dispatcher = request.getRequestDispatcher("profilo.jsp");
         dispatcher.forward(request, response);

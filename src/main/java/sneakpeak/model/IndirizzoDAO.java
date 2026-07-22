@@ -87,4 +87,34 @@ public class IndirizzoDAO {
         }
         return generatedId;
     }
+
+    public boolean doDelete(int idIndirizzo, int idUtente) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        boolean deleted = false;
+
+        String deleteSQL = "DELETE FROM INDIRIZZO WHERE id_indirizzo = ? AND id_utente = ?";
+
+        try {
+            connection = DBConnectionPool.getConnection();
+            ps = connection.prepareStatement(deleteSQL);
+            ps.setInt(1, idIndirizzo);
+            ps.setInt(2, idUtente);
+
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                deleted = true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore eliminazione indirizzo: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (connection != null) DBConnectionPool.releaseConnection(connection);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return deleted;
+    }
 }
