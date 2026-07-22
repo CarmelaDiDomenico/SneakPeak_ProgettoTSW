@@ -18,12 +18,21 @@
     <meta charset="UTF-8">
     <title>Aggiungi Prodotto - Admin</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Fix per evitare che input e textarea escano fuori dal contenitore a causa del padding */
+        input[type="text"], input[type="number"], input[type="file"], select, textarea {
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical; /* Impedisce di allargare la textarea orizzontalmente rompendo il design */
+        }
+    </style>
 </head>
 <body>
 
     <jsp:include page="header.jsp" />
 
-    <div style="max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+    <div style="width: 100%; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; box-sizing: border-box;">
         <h2 style="text-align: center; color: #333;">👟 Aggiungi Nuova Sneaker</h2>
         
         <% if ("true".equals(request.getParameter("successo"))) { %>
@@ -88,5 +97,6 @@
         </form>
     </div>
 
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

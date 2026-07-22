@@ -57,5 +57,7 @@
         <p>Sembra che la sneaker che stavi cercando sia fuori stock... o forse il link era sbagliato. Controlla l'URL o torna alla nostra homepage per continuare lo shopping.</p>
         <a href="home" class="btn">Torna alla Home</a>
     </div>
+
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

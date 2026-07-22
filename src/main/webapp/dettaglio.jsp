@@ -24,6 +24,8 @@
             justify-content: center; /* Centra tutto il blocco in mezzo allo schermo orizzontalmente */
             gap: 40px;             /* Crea uno spazio vuoto di 40 pixel tra l'immagine a sinistra e i testi a destra */
             max-width: 1000px;     /* Impedisce alla pagina di allargarsi all'infinito su schermi giganti. Si ferma a 1000px */
+            width: 100%;           /* Espandi fino al max-width */
+            box-sizing: border-box;/* Include padding nella larghezza */
             margin: 50px auto;     /* margin: [Sopra/Sotto] [Destra/Sinistra]. 50px di spazio sopra/sotto, e 'auto' centra il div nello schermo */
             padding: 20px;         /* Spazio "cuscinetto" interno: evita che il testo tocchi i bordi del contenitore */
         }

@@ -71,5 +71,7 @@
             Errore imprevisto lato server. Impossibile processare la richiesta corrente.
         </div>
     </div>
+
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

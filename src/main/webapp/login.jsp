@@ -6,12 +6,14 @@
     <title>SneakPeak - Login</title>
     <style>
         .container {
-            max-width: 450px;
+            width: 100%;
+            max-width: 500px;
             margin: 50px auto;
             background-color: #f9f9f9;
-            padding: 30px;
+            padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         .container h2 {
             text-align: center;

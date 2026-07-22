@@ -22,6 +22,7 @@
         th { background-color: #333; color: white; }
         .btn-update { background-color: #f0ad4e; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
         .btn-delete { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+        .btn-hard-delete { background-color: #000; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin-top: 5px; }
         .btn-activate { background-color: #5cb85c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
         .badge-nascosto { background-color: #777; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
         .badge-attivo { background-color: #5cb85c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
@@ -71,7 +72,7 @@
 
             <td>
                 <% if (p.getIsDeleted() == 0) { %>
-                    <form action="gestioneCatalogo" method="POST" style="display:inline;" onsubmit="return confirm('Vuoi davvero nascondere questo prodotto dai clienti?');">
+                    <form action="gestioneCatalogo" method="POST" style="display:inline;" onsubmit="requireConfirm(event, 'Vuoi davvero nascondere questo prodotto dai clienti?');">
                         <input type="hidden" name="action" value="nascondi">
                         <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
                         <button type="submit" class="btn-delete">🗑️ Nascondi</button>
@@ -83,10 +84,17 @@
                          <button type="submit" class="btn-activate">👁️ Mostra</button>
                     </form>
                 <% } %>
+                <br>
+                <form action="gestioneCatalogo" method="POST" style="display:inline;" onsubmit="requireConfirm(event, 'ATTENZIONE: Vuoi ELIMINARE DEFINITIVAMENTE questo prodotto e tutti i suoi dati dal database? Questa azione non può essere annullata.');">
+                    <input type="hidden" name="action" value="eliminaFisicamente">
+                    <input type="hidden" name="idProdotto" value="<%= p.getIdProdotto() %>">
+                    <button type="submit" class="btn-hard-delete">❌ Elimina</button>
+                </form>
             </td>
         </tr>
         <% } %>
     </table>
 
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

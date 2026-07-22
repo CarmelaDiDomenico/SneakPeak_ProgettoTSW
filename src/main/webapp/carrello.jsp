@@ -21,6 +21,8 @@
             flex-wrap: wrap;          /* Se lo schermo è piccolo (es. smartphone), sposta il riepilogo sotto la lista */
             gap: 30px;                /* Crea un'intercapedine vuota di 30px tra le due colonne */
             max-width: 1200px;        /* Impedisce alla pagina di allargarsi oltre i 1200px su schermi enormi */
+            width: 100%;              /* Si espande al 100% dello spazio disponibile fino al max-width */
+            box-sizing: border-box;   /* Include il padding nella larghezza totale */
             margin: 40px auto;        /* 40px di spazio sopra/sotto il carrello; 'auto' centra tutto il blocco nella pagina */
             padding: 0 20px;          /* Crea un cuscinetto di 20px ai lati destro e sinistro per non far toccare i bordi */
         }

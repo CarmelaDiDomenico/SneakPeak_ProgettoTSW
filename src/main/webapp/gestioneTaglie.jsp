@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
     <title>Gestione Taglie - <%= prodotto.getNome() %></title>
     <style>
-        .container { max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif; }
+        .container { width: 100%; box-sizing: border-box; max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
         table, th, td { border: 1px solid #ddd; }
         th, td { padding: 12px; text-align: left; }
@@ -65,11 +65,11 @@
                             <td>
                                 <button type="submit" class="btn btn-update">Aggiorna</button>
                         </form>
-                                <form action="gestioneTaglie" method="POST" style="display:inline;">
+                                <form action="gestioneTaglie" method="POST" style="display:inline;" onsubmit="requireConfirm(event, 'Sicuro di voler eliminare questa taglia?');">
                                     <input type="hidden" name="azione" value="elimina">
                                     <input type="hidden" name="idProdotto" value="<%= prodotto.getIdProdotto() %>">
                                     <input type="hidden" name="idVariante" value="<%= v.getIdVariante() %>">
-                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Sicuro di voler eliminare questa taglia?');">Elimina</button>
+                                    <button type="submit" class="btn btn-delete">Elimina</button>
                                 </form>
                             </td>
                     </tr>
@@ -93,5 +93,7 @@
             </form>
         </div>
     </div>
+    
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
