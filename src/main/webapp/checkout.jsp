@@ -63,9 +63,38 @@
             if (select.value === "nuovo") {
                 formNuovo.style.display = "block";
                 document.getElementById("nuovoIntestatario").required = true;
+                toggleCampiCarta(); // Aggiorna i required in base al tipo selezionato
             } else {
                 formNuovo.style.display = "none";
                 document.getElementById("nuovoIntestatario").required = false;
+                
+                // Disabilita anche i required della carta per evitare blocchi al submit
+                if(document.getElementById("fintoNumeroCarta")) document.getElementById("fintoNumeroCarta").required = false;
+                if(document.getElementById("fintaScadenza")) document.getElementById("fintaScadenza").required = false;
+                if(document.getElementById("fintoCVV")) document.getElementById("fintoCVV").required = false;
+            }
+        }
+
+        function toggleCampiCarta() {
+            var tipoSelect = document.getElementById("nuovoTipo");
+            var campiCarta = document.getElementById("campi-carta-fittizi");
+            var fintoNumeroCarta = document.getElementById("fintoNumeroCarta");
+            var fintaScadenza = document.getElementById("fintaScadenza");
+            var fintoCVV = document.getElementById("fintoCVV");
+            
+            if (campiCarta && tipoSelect) {
+                var tipo = tipoSelect.value;
+                if (tipo === "Carta di Credito" || tipo === "Carta di Debito") {
+                    campiCarta.style.display = "block";
+                    fintoNumeroCarta.required = true;
+                    fintaScadenza.required = true;
+                    fintoCVV.required = true;
+                } else {
+                    campiCarta.style.display = "none";
+                    fintoNumeroCarta.required = false;
+                    fintaScadenza.required = false;
+                    fintoCVV.required = false;
+                }
             }
         }
     </script>
@@ -74,7 +103,7 @@
 
     <jsp:include page="header.jsp" />
 
-    <div class="checkout-container" style="max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif;">
+    <div class="checkout-container" style="width: 100%; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif; box-sizing: border-box;">
         <h2>Completamento Ordine</h2>
         <p>Benvenuto al checkout, <strong><%= utente.getNome() %></strong>. Controlla i tuoi dati prima di confermare.</p>
         
@@ -150,7 +179,7 @@
                 <h4>Nuovo Metodo</h4>
                 
                 <div style="margin-bottom: 10px;">
-                    <select name="nuovoTipo" id="nuovoTipo" style="width: 100%; padding: 8px;">
+                    <select name="nuovoTipo" id="nuovoTipo" style="width: 100%; padding: 8px;" onchange="toggleCampiCarta()">
                         <option value="Carta di Credito">Carta di Credito</option>
                         <option value="Carta di Debito">Carta di Debito</option>
                         <option value="PayPal">PayPal</option>
@@ -160,7 +189,19 @@
                 </div>
                 
                 <div style="margin-bottom: 10px;">
-                    <input type="text" name="nuovoIntestatario" id="nuovoIntestatario" placeholder="Nome Intestatario" style="width: 100%; padding: 8px;" <%= (listaPagamenti == null || listaPagamenti.isEmpty()) ? "required" : "" %>>
+                    <input type="text" name="nuovoIntestatario" id="nuovoIntestatario" placeholder="Nome Intestatario" style="width: 100%; padding: 8px; box-sizing: border-box;" <%= (listaPagamenti == null || listaPagamenti.isEmpty()) ? "required" : "" %>>
+                </div>
+
+                <!-- Campi fittizi per la carta (solo per la User Experience, non vengono salvati) -->
+                <div id="campi-carta-fittizi">
+                    <div style="margin-bottom: 10px;">
+                        <input type="text" id="fintoNumeroCarta" placeholder="Numero Carta (es. 1234567891011121)" maxlength="16" pattern="\d{16}" title="Inserisci esattamente 16 numeri, senza spazi" style="width: 100%; padding: 8px; box-sizing: border-box;" oninput="this.value = this.value.replace(/\D/g, '')" <%= (listaPagamenti == null || listaPagamenti.isEmpty()) ? "required" : "" %>>
+                    </div>
+                    <div style="margin-bottom: 10px; display: flex; gap: 10px;">
+                        <input type="text" id="fintaScadenza" placeholder="Scadenza (MM/AA)" maxlength="5" pattern="(0[1-9]|1[0-2])\/\d{2}" title="Inserisci una data valida nel formato MM/AA" style="width: 50%; padding: 8px; box-sizing: border-box;" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" <%= (listaPagamenti == null || listaPagamenti.isEmpty()) ? "required" : "" %>>
+                        <input type="text" id="fintoCVV" placeholder="CVV" maxlength="3" pattern="\d{3}" title="Inserisci 3 numeri" style="width: 50%; padding: 8px; box-sizing: border-box;" oninput="this.value = this.value.replace(/\D/g, '')" <%= (listaPagamenti == null || listaPagamenti.isEmpty()) ? "required" : "" %>>
+                    </div>
+                    <p style="font-size: 11px; color: #777; margin-top: 5px;">🔒 I dati sensibili della carta sono processati in modo sicuro e non verranno memorizzati nel nostro database.</p>
                 </div>
             </div>
             
@@ -170,5 +211,6 @@
         </form>
     </div>
 
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
