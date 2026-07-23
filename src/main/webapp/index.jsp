@@ -20,7 +20,69 @@
 
     <%@ include file="header.jsp" %>
 
-    <h2 style="text-align:center; margin-top:30px;">Nuovi Arrivi</h2>
+    <h2 style="text-align:center; margin-top:30px;">
+        <%= request.getParameter("categoria") != null ? "Catalogo Categoria Selezionata" : "Nuovi Arrivi" %>
+    </h2>
+
+    <div class="filter-bar" style="text-align: center; margin: 20px auto; background-color: #f4f4f4; padding: 15px; border-radius: 8px; width: 90%; max-width: 800px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <form action="home" method="GET" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center;">
+            
+            <% if (request.getParameter("categoria") != null) { %>
+                <input type="hidden" name="categoria" value="<%= request.getParameter("categoria") %>">
+            <% } %>
+
+            <div>
+                <label for="marca" style="font-weight: bold; margin-right: 5px;">Marca:</label>
+                <select name="marca" id="marca" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; background-color: white;">
+                    <option value="">Tutte le marche</option>
+                    <%
+                        List<String> marche = (List<String>) request.getAttribute("marcheDisponibili");
+                        String selectedMarca = request.getParameter("marca");
+                        if (marche != null) {
+                            for (String m : marche) {
+                    %>
+                                <option value="<%= m %>" <%= (m.equalsIgnoreCase(selectedMarca)) ? "selected" : "" %>><%= m %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+            </div>
+
+            <div>
+                <label for="taglia" style="font-weight: bold; margin-right: 5px;">Taglia:</label>
+                <select name="taglia" id="taglia" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; background-color: white;">
+                    <option value="">Tutte le taglie</option>
+                    <%
+                        List<String> taglie = (List<String>) request.getAttribute("taglieDisponibili");
+                        String selectedTaglia = request.getParameter("taglia");
+                        if (taglie != null) {
+                            for (String t : taglie) {
+                    %>
+                                <option value="<%= t %>" <%= (t.equalsIgnoreCase(selectedTaglia)) ? "selected" : "" %>><%= t %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+            </div>
+
+            <div>
+                <label for="ordinamento" style="font-weight: bold; margin-right: 5px;">Ordina per:</label>
+                <select name="ordinamento" id="ordinamento" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; background-color: white;">
+                    <% String selectedOrd = request.getParameter("ordinamento"); %>
+                    <option value="">Nessun ordinamento</option>
+                    <option value="prezzo_asc" <%= "prezzo_asc".equals(selectedOrd) ? "selected" : "" %>>Prezzo: Crescente</option>
+                    <option value="prezzo_desc" <%= "prezzo_desc".equals(selectedOrd) ? "selected" : "" %>>Prezzo: Decrescente</option>
+                    <option value="nome_asc" <%= "nome_asc".equals(selectedOrd) ? "selected" : "" %>>Nome: A-Z</option>
+                    <option value="nome_desc" <%= "nome_desc".equals(selectedOrd) ? "selected" : "" %>>Nome: Z-A</option>
+                </select>
+            </div>
+
+            <button type="submit" style="background-color: #337ab7; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Applica Filtri</button>
+            <a href="home" style="text-decoration: none; color: white; background-color: #d9534f; padding: 8px 15px; border-radius: 4px; font-weight: bold; font-size: 13.3333px;">Resetta</a>
+        </form>
+    </div>
 
     <div class="grid-container">
         <%

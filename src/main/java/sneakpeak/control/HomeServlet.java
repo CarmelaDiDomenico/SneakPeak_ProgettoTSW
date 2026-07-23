@@ -26,18 +26,74 @@ public class HomeServlet extends HttpServlet {
         //Chiamiamo il nostro DAO
         ProdottoDAO prodottoDAO = new ProdottoDAO();
         
-        // Leggiamo se c'è un filtro categoria
-        String idCategoriaStr = request.getParameter("categoria");
-        List<Prodotto> catalogo;
+        // Recuperiamo tutto il catalogo per estrarre le marche e poi filtrare
+        List<Prodotto> tutto = prodottoDAO.doRetrieveAll();
         
+        // Estrai tutte le marche uniche disponibili per popolare la tendina filtri
+        List<String> marcheDisponibili = tutto.stream()
+                .map(Prodotto::getMarca)
+                .distinct()
+                .sorted()
+                .collect(java.util.stream.Collectors.toList());
+        request.setAttribute("marcheDisponibili", marcheDisponibili);
+        
+        // Estrai tutte le taglie uniche disponibili da tutte le varianti
+        List<String> taglieDisponibili = tutto.stream()
+                .flatMap(p -> p.getVarianti().stream())
+                .map(sneakpeak.model.Variante::getTaglia)
+                .distinct()
+                .sorted()
+                .collect(java.util.stream.Collectors.toList());
+        request.setAttribute("taglieDisponibili", taglieDisponibili);
+        
+        List<Prodotto> catalogo = tutto;
+        
+        // 1. Filtro Categoria
+        String idCategoriaStr = request.getParameter("categoria");
         if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
             int idCategoria = Integer.parseInt(idCategoriaStr);
-            catalogo = prodottoDAO.doRetrieveByCategory(idCategoria);
-        } else {
-            catalogo = prodottoDAO.doRetrieveAll();
+            catalogo = catalogo.stream()
+                    .filter(p -> p.getIdCategoria() == idCategoria)
+                    .collect(java.util.stream.Collectors.toList());
         }
         
-        //Inseriamo questa lista di scarpe dentro la richiesta
+        // 2. Filtro Marca
+        String marca = request.getParameter("marca");
+        if (marca != null && !marca.isEmpty()) {
+            catalogo = catalogo.stream()
+                    .filter(p -> p.getMarca().equalsIgnoreCase(marca))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // 3. Filtro Taglia (mostra solo prodotti che hanno quella taglia con quantità > 0)
+        String taglia = request.getParameter("taglia");
+        if (taglia != null && !taglia.isEmpty()) {
+            catalogo = catalogo.stream()
+                    .filter(p -> p.getVarianti().stream()
+                            .anyMatch(v -> v.getTaglia().equalsIgnoreCase(taglia) && v.getDisponibilita() > 0))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // 4. Ordinamento
+        String ordinamento = request.getParameter("ordinamento");
+        if (ordinamento != null && !ordinamento.isEmpty()) {
+            switch (ordinamento) {
+                case "prezzo_asc":
+                    catalogo.sort(java.util.Comparator.comparingDouble(Prodotto::getPrezzo));
+                    break;
+                case "prezzo_desc":
+                    catalogo.sort(java.util.Comparator.comparingDouble(Prodotto::getPrezzo).reversed());
+                    break;
+                case "nome_asc":
+                    catalogo.sort(java.util.Comparator.comparing(Prodotto::getNome));
+                    break;
+                case "nome_desc":
+                    catalogo.sort(java.util.Comparator.comparing(Prodotto::getNome).reversed());
+                    break;
+            }
+        }
+        
+        //Inseriamo questa lista filtrata e ordinata dentro la richiesta
         request.setAttribute("listaProdotti", catalogo);
         
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
