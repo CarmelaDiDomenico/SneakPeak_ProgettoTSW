@@ -24,6 +24,8 @@ INSERT INTO CATEGORIA (nome) VALUES
 ('Bambino'),
 ('Unisex');
 
+-- Le password sono sempre:Pass123! 
+
 INSERT INTO UTENTE (email, password, nome, cognome, tipo) VALUES
 ('admin@sneakpeak.it', '46708f23d682fef9aa996ecbb139bfb6c9ffdc039905ad6ad5c85a88b9411d97', 'Admin', 'Super', 'ADMIN'),
 ('giovanna.greco2@gmail.com', '46708f23d682fef9aa996ecbb139bfb6c9ffdc039905ad6ad5c85a88b9411d97', 'Giovanna', 'Greco', 'CLIENTE'),
