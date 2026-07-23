@@ -24,7 +24,7 @@
         <%= request.getParameter("categoria") != null ? "Catalogo Categoria Selezionata" : "Nuovi Arrivi" %>
     </h2>
 
-    <div class="filter-bar" style="text-align: center; margin: 20px auto; background-color: #f4f4f4; padding: 15px; border-radius: 8px; width: 90%; max-width: 800px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <div class="filter-bar" style="text-align: center; margin: 20px auto; background-color: #f4f4f4; padding: 15px; border-radius: 8px; width: 90%; max-width: 1000px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <form action="home" method="GET" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center;">
             
             <% if (request.getParameter("categoria") != null) { %>
