@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/gestioneTaglie.css">
 </head>
 <body>
+    <jsp:include page="header.jsp"/>
     <div class="container">
         <a href="gestioneCatalogo" class="btn btn-back">← Torna al Catalogo</a>
         <h2>Gestione Taglie e Quantità</h2>
