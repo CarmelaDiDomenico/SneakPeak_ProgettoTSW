@@ -107,8 +107,7 @@ public class OrdineDAO {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-
-        // LEFT JOIN: se l'utente è stato cancellato, l'ordine viene comunque restituito
+        
         String selectSQL =
             "SELECT o.*, u.nome AS nome_utente, u.cognome AS cognome_utente, u.email AS email_utente " +
             "FROM ORDINE o LEFT JOIN UTENTE u ON o.id_utente = u.id_utente " +

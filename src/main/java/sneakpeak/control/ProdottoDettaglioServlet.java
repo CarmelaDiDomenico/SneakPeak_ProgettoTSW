@@ -21,15 +21,14 @@ public class ProdottoDettaglioServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // 1. Leggiamo l'ID dall'URL. request.getParameter legge tutto come testo (String)
+
         String idStringa = request.getParameter("id");
         
         if (idStringa != null) {
             try {
-                // 2. Convertiamo il testo in un numero intero (int)
                 int idProdotto = Integer.parseInt(idStringa);
                 
-                // 3. Chiamiamo il DAO per cercare la scarpa
+                //Chiamiamo il DAO per cercare la scarpa
                 ProdottoDAO dao = new ProdottoDAO();
                 Prodotto prodotto = dao.doRetrieveById(idProdotto);
                 
@@ -56,14 +55,13 @@ public class ProdottoDettaglioServlet extends HttpServlet {
                 }
                 
             } catch (NumberFormatException e) {
-                // Se qualcuno manomette l'URL scrivendo lettere al posto del numero (es. dettaglio?id=ciao)
+                
                 request.setAttribute("errore", "ID prodotto non valido.");
             }
         } else {
             request.setAttribute("errore", "Nessun ID prodotto specificato.");
         }
         
-        // 5. Passiamo il controllo alla pagina HTML/JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("/dettaglio.jsp");
         dispatcher.forward(request, response);
     }

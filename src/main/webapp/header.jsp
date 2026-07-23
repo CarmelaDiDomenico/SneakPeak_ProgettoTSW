@@ -102,7 +102,7 @@
                                 return; // Non cerchiamo se ha scritto meno di 2 lettere
                             }
 
-                            // Chiamata AJAX con Fetch API (Requisito Checklist)
+                            // Chiamata AJAX con Fetch API
                             fetch('ricercaAjax?q=' + encodeURIComponent(query))
                                 .then(response => response.json()) // Chiediamo di convertire la risposta in JSON
                                 .then(data => {

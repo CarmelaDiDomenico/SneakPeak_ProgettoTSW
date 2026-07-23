@@ -2,7 +2,6 @@ package sneakpeak.model;
 
 public class Utente {
     
-    // Le variabili private
     private int idUtente;
     private String email;
     private String password;
@@ -10,11 +9,9 @@ public class Utente {
     private String cognome;
     private String tipo;
 
-    // Costruttore vuoto
     public Utente() {
     }
 
-    // Generiamo i "Getters" e "Setters"
     
     public int getIdUtente() {
         return idUtente;

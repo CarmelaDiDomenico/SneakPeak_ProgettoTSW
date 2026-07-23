@@ -10,8 +10,6 @@ public class Recensione {
     private Date dataRecensione;
     private int idUtente;
     private int idProdotto;
-    
-    // Campi transient per mostrare l'autore senza query aggiuntive
     private String nomeUtente;
     private String cognomeUtente;
 

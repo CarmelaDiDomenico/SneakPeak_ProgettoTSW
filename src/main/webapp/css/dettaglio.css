@@ -1,88 +1,85 @@
-/* =========================================================
-    SPIEGAZIONE CSS:
-    Ogni blocco definisce l'aspetto di un "pezzo" della pagina.
-    ========================================================= */
 
-/* 1. IL CONTENITORE PRINCIPALE */
+
+/* IL CONTENITORE PRINCIPALE */
 .product-container {
-    display: flex;         /* Attiva Flexbox. Dice al browser: "Metti i figli di questo div uno accanto all'altro in riga" */
-    flex-wrap: wrap;       /* Se lo schermo è troppo piccolo (es. cellulare), manda gli elementi a capo invece di schiacciarli */
-    justify-content: center; /* Centra tutto il blocco in mezzo allo schermo orizzontalmente */
-    gap: 40px;             /* Crea uno spazio vuoto di 40 pixel tra l'immagine a sinistra e i testi a destra */
-    max-width: 1000px;     /* Impedisce alla pagina di allargarsi all'infinito su schermi giganti. Si ferma a 1000px */
-    width: 100%;           /* Espandi fino al max-width */
-    box-sizing: border-box;/* Include padding nella larghezza */
-    margin: 50px auto;     /* margin: [Sopra/Sotto] [Destra/Sinistra]. 50px di spazio sopra/sotto, e 'auto' centra il div nello schermo */
-    padding: 20px;         /* Spazio "cuscinetto" interno: evita che il testo tocchi i bordi del contenitore */
-}
-
-/* 2. LA SEZIONE IMMAGINE (Sinistra) */
-.product-image {
-    flex: 1;               /* Dice al div di occupare 1 porzione di spazio disponibile. */
-    min-width: 300px;      /* L'immagine non diventerà mai più stretta di 300px, nemmeno stringendo la finestra */
-    background-color: #f5f5f5; /* Un grigio chiarissimo per simulare lo sfondo di uno studio fotografico */
-    border-radius: 10px;   /* Arrotonda gli angoli del riquadro dell'immagine di 10 pixel (effetto moderno) */
-    display: flex;         /* Attiviamo Flexbox anche qui per centrare il testo finto dell'immagine */
-    align-items: center;   /* Centra il contenuto verticalmente */
-    justify-content: center; /* Centra il contenuto orizzontalmente */
-    height: 400px;         /* Altezza fissa del box immagine */
-    border: 1px solid #ddd; /* Un bordino grigio molto sottile per delineare il contorno */
-}
-
-/* 3. LA SEZIONE DETTAGLI/TESTO (Destra) */
-.product-info {
-    flex: 1;               /* Occupa un'altra porzione di spazio, diventando grande quanto l'immagine (layout 50-50) */
-    min-width: 300px;      /* Non stringere i testi sotto i 300px */
     display: flex;         
-    flex-direction: column; /* Importante: dice ai testi di mettersi in colonna (uno sotto l'altro), non in riga! */
-    justify-content: center; /* Centra verticalmente il blocco di testi rispetto all'altezza dell'immagine */
+    flex-wrap: wrap;       
+    justify-content: center; 
+    gap: 40px;             
+    max-width: 1000px;     
+    width: 100%;           
+    box-sizing: border-box;
+    margin: 50px auto;    
+    padding: 20px;         
 }
 
-/* 4. STILI PER I TESTI SPECIFICI */
+/* LA SEZIONE IMMAGINE (Sinistra) */
+.product-image {
+    flex: 1;               
+    min-width: 300px;      
+    background-color: #f5f5f5; 
+    border-radius: 10px;   
+    display: flex;         
+    align-items: center;   
+    justify-content: center; 
+    height: 400px;         
+    border: 1px solid #ddd; 
+}
+
+/* LA SEZIONE DETTAGLI/TESTO (Destra) */
+.product-info {
+    flex: 1;               
+    min-width: 300px;     
+    display: flex;         
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+/* STILI PER I TESTI SPECIFICI */
 .product-info h2 {
-    font-size: 2.2em;      /* Ingrandisce il titolo (nome scarpa). 'em' è relativo alla grandezza base del testo */
-    margin-bottom: 5px;    /* Spazio sotto il titolo per staccarlo dalla marca */
-    color: #2F4F4F;        /* Il tuo colore di design: Grigio fumo */
+    font-size: 2.2em;     
+    margin-bottom: 5px;    
+    color: #2F4F4F;       
 }
 
 .product-brand {
-    color: #888;           /* Grigio medio per far risaltare meno la marca rispetto al titolo */
+    color: #888;          
     font-size: 1.1em;
-    margin-top: 0;         /* Toglie lo spazio vuoto sopra, avvicinandolo al titolo */
+    margin-top: 0;        
 }
 
 .product-price {
-    font-size: 1.8em;      /* Prezzo bello grande */
-    font-weight: bold;     /* Testo in grassetto */
-    color: #000;           /* Nero puro per massima leggibilità */
-    margin: 20px 0;        /* 20px di spazio sopra e sotto il prezzo. 0 spazio a destra e sinistra */
+    font-size: 1.8em;      
+    font-weight: bold;    
+    color: #000;          
+    margin: 20px 0;      
 }
 
 .product-desc {
-    line-height: 1.6;      /* Aumenta lo spazio tra una riga e l'altra del paragrafo, rendendo la lettura meno faticosa */
+    line-height: 1.6;      
     color: #555;
 }
 
-/* 5. IL BOTTONE DI ACQUISTO */
+/* IL BOTTONE DI ACQUISTO */
 .btn-add {
-    background-color: #39FF14; /* Il tuo colore di design: Verde neon */
-    color: #000;           /* Testo nero per fare alto contrasto sul verde brillante */
-    border: none;          /* Rimuove il bordino brutto che i browser mettono di default ai bottoni */
-    padding: 15px 30px;    /* Ingrandisce il bottone. 15px di spazio interno verticale, 30px orizzontale */
+    background-color: #39FF14;
+    color: #000;          
+    border: none;        
+    padding: 15px 30px;    
     font-size: 1.1em;
     font-weight: bold;
-    border-radius: 5px;    /* Arrotonda leggermente gli angoli del bottone */
-    cursor: pointer;       /* Quando passi col mouse, la freccetta diventa una "manina" cliccabile */
-    margin-top: 20px;      /* Lo spinge un po' in giù rispetto alla descrizione */
-    transition: 0.3s;      /* Effetto morbido: le modifiche al colore (hover) avverranno gradualmente in 0.3 secondi */
+    border-radius: 5px;   
+    cursor: pointer;      
+    margin-top: 20px;      
+    transition: 0.3s;      
 }
 
-/* 6. EFFETTO HOVER DEL BOTTONE (Quando il mouse ci passa sopra) */
+/*EFFETTO HOVER DEL BOTTONE (Quando il mouse ci passa sopra) */
 .btn-add:hover {
-    background-color: #32E012; /* Un verde leggermente più scuro per dare l'illusione di averlo premuto */
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.2); /* Aggiunge un'ombra morbida sotto il bottone (nero al 20% di trasparenza) */
+    background-color: #32E012; 
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2); 
 }
-/* 7. STILI RECENSIONI */
+/* STILI RECENSIONI */
 .reviews-section {
     width: 100%;
     margin-top: 40px;

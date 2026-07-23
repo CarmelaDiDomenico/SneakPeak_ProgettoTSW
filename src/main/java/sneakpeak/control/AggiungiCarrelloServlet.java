@@ -19,7 +19,7 @@ public class AggiungiCarrelloServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // 1. Leggiamo l'ID del prodotto inviato dal bottone/form
+        //Leggiamo l'ID del prodotto inviato dal bottone/form
         String idString = request.getParameter("id");
         String taglia = request.getParameter("taglia");
         
@@ -32,20 +32,20 @@ public class AggiungiCarrelloServlet extends HttpServlet {
                 Prodotto prodotto = dao.doRetrieveById(idProdotto);
                 
                 if (prodotto != null) {
-                    // 3. Recupero della sessione
+                    //Recupero della sessione
                     HttpSession session = request.getSession(true);
                     
-                    // 4. Estraiamo l'oggetto carrello dalla sessione
+                    //Estraiamo l'oggetto carrello dalla sessione
                     Carrello carrello = (Carrello) session.getAttribute("carrello");
                     
                     // Se l'utente non ha mai aggiunto nulla, l'oggetto non esiste (è null). Lo creiamo noi.
                     if (carrello == null) {
                         carrello = new Carrello();
-                        // Lo salviamo nella sessione così Tomcat lo ricorderà nelle prossime pagine
+                        // Lo salviamo nella sessione
                         session.setAttribute("carrello", carrello);
                     }
                     
-                    // 5. Controlliamo se ci sono abbastanza scorte per aggiungere un'altra unità
+                    //Controlliamo se ci sono abbastanza scorte per aggiungere un'altra unità
                     sneakpeak.model.Variante var = prodotto.getVarianti().stream()
                         .filter(v -> v.getTaglia().equals(taglia))
                         .findFirst().orElse(null);

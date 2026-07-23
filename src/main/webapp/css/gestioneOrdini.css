@@ -5,10 +5,8 @@ th { background-color: #333; color: white; }
 .badge-stato { padding: 5px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; color: white; }
 .btn-print { background-color: #333; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 10px; }
 
-/* =========================================
-   STILI PER AREA DI STAMPA FATTURE 
-   (Copiati da storicoOrdini.jsp per identicità)
-   ========================================= */
+/*
+   STILI PER AREA DI STAMPA FATTURE   */
 #print-area { display: none; }
 
 .ordine-card {

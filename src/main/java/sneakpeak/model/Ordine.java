@@ -10,8 +10,6 @@ public class Ordine {
     private int idIndirizzo;
     private int idPagamento;
     private String stato;
-
-    // Campi transient: non presenti nella tabella ORDINE,
     // vengono popolati dalla JOIN con UTENTE nelle query Admin.
     private String nomeCliente;
     private String emailCliente;

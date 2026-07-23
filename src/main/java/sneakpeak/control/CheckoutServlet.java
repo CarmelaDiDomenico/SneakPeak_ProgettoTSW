@@ -63,7 +63,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
         
-        // 1. GESTIONE INDIRIZZO
+        //GESTIONE INDIRIZZO
         int idIndirizzoFinal = -1;
         String idIndirizzoSelezionato = request.getParameter("idIndirizzo");
         
@@ -85,7 +85,7 @@ public class CheckoutServlet extends HttpServlet {
             idIndirizzoFinal = Integer.parseInt(idIndirizzoSelezionato);
         }
         
-        // 2. GESTIONE PAGAMENTO
+        //GESTIONE PAGAMENTO
         int idPagamentoFinal = -1;
         String idPagamentoSelezionato = request.getParameter("idPagamento");
         
@@ -109,7 +109,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
         
-        // 3. CREAZIONE ORDINE
+        // CREAZIONE ORDINE
         Ordine ordine = new Ordine();
         ordine.setIdUtente(utente.getIdUtente());
         ordine.setTotale(carrello.getPrezzoTotale());

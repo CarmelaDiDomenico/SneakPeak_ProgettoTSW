@@ -157,7 +157,7 @@
     .container { 
         width: 100%; 
         margin: 0; 
-        padding: 1.5cm !important; /* Diamo spazio ai bordi fisici del foglio */
+        padding: 1.5cm !important; 
         box-sizing: border-box;
         box-shadow: none; 
         border-radius: 0; 

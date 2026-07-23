@@ -46,7 +46,7 @@
             // Recuperiamo il carrello direttamente dalla sessione dell'utente
             Carrello carrello = (Carrello) session.getAttribute("carrello");
             
-            // Caso 1: Il carrello non esiste nella sessione oppure esiste ma è vuoto
+            //Il carrello non esiste nella sessione oppure esiste ma è vuoto
             if (carrello == null || carrello.isEmpty()) {
         %>
                 <div style="text-align:center; width:100%; padding:50px 0;">
@@ -54,7 +54,7 @@
                     <a href="home" style="color:#2F4F4F; font-weight:bold;">Torna al catalogo per aggiungere sneaker</a>
                 </div>
         <%
-            // Caso 2: Il carrello contiene almeno una scarpa
+            // Il carrello contiene almeno una scarpa
             } else {
         %>
                 <div class="cart-items-list">

@@ -20,7 +20,6 @@ public class Prodotto implements Serializable {
     // Lista delle varianti (taglie e quantità) associate al prodotto
     private List<Variante> varianti = new ArrayList<>();
 
-    // Costruttore vuoto di default
     public Prodotto() {
     }
 
@@ -43,8 +42,6 @@ public class Prodotto implements Serializable {
         this.varianti = varianti;
     }
 
-
-    // Metodi Getter e Setter
 
     public int getIdProdotto() {
         return idProdotto;

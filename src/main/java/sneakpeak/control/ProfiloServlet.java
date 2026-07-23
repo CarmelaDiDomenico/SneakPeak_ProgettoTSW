@@ -21,7 +21,6 @@ import sneakpeak.util.PasswordHelper;
 public class ProfiloServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Metodo GET: il Cameriere porta il menu al tavolo
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Utente utente = (Utente) session.getAttribute("utenteLoggato");
@@ -32,14 +31,12 @@ public class ProfiloServlet extends HttpServlet {
             return;
         }
 
-        // Il collega ha già creato IndirizzoDAO! Lo usiamo per prendere gli indirizzi dell'utente
         IndirizzoDAO indirizzoDAO = new IndirizzoDAO();
         List<Indirizzo> listaIndirizzi = indirizzoDAO.doRetrieveByUtente(utente.getIdUtente());
         
         sneakpeak.model.MetodoPagamentoDAO pagamentoDAO = new sneakpeak.model.MetodoPagamentoDAO();
         List<sneakpeak.model.MetodoPagamento> listaPagamenti = pagamentoDAO.doRetrieveByUtente(utente.getIdUtente());
         
-        // Passiamo le liste alla JSP
         request.setAttribute("listaIndirizzi", listaIndirizzi);
         request.setAttribute("listaPagamenti", listaPagamenti);
         
@@ -47,7 +44,6 @@ public class ProfiloServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    // Metodo POST: il Cameriere prende l'ordinazione (i dati modificati)
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Utente utente = (Utente) session.getAttribute("utenteLoggato");
@@ -57,31 +53,29 @@ public class ProfiloServlet extends HttpServlet {
             return;
         }
 
-        // 1. Recuperiamo i nuovi dati dal form
+        //Recuperiamo i nuovi dati dal form
         String nuovoNome = request.getParameter("nome");
         String nuovoCognome = request.getParameter("cognome");
         String nuovaPassword = request.getParameter("password");
         
-        // 2. Aggiorniamo l'oggetto Utente
+        //Aggiorniamo l'oggetto Utente
         utente.setNome(nuovoNome);
         utente.setCognome(nuovoCognome);
         
         // Controlliamo se l'utente vuole cambiare la password
         if (nuovaPassword != null && !nuovaPassword.trim().isEmpty()) {
-            // Se ha scritto qualcosa, la cifriamo con il nostro aiutante prima di salvarla
+            // Se ha scritto qualcosa, la cifriamo prima di salvarla
             String passwordCifrata = PasswordHelper.hashPassword(nuovaPassword);
             utente.setPassword(passwordCifrata);
         }
         // Se ha lasciato vuoto, la password rimane quella vecchia (che è già cifrata in sessione)
         
-        // 3. Chiamiamo il Cuoco (DAO) per salvare i cambiamenti nel Database
         UtenteDAO dao = new UtenteDAO();
         boolean aggiornato = dao.doUpdate(utente);
         
         if (aggiornato) {
             // Aggiorniamo la sessione con i nuovi dati
             session.setAttribute("utenteLoggato", utente);
-            // Torniamo alla pagina profilo ricaricandola con successo
             response.sendRedirect("profilo?successo=true");
         } else {
             response.sendRedirect("profilo?errore=true");

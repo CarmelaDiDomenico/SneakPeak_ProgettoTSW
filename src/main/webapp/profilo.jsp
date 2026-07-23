@@ -66,7 +66,6 @@
         <h2 class="section-title">I Tuoi Indirizzi di Spedizione</h2>
         
         <%
-            // Questa lista ci arriva dalla ProfiloServlet
             List<Indirizzo> indirizzi = (List<Indirizzo>) request.getAttribute("listaIndirizzi");
             if (indirizzi != null && !indirizzi.isEmpty()) {
                 for (Indirizzo ind : indirizzi) {
@@ -160,7 +159,7 @@
     <jsp:include page="footer.jsp" />
 
     <script>
-        // VALIDAZIONE LATO CLIENT (Rispetta i requisiti della checklist!)
+        // VALIDAZIONE LATO CLIENT 
         document.getElementById('formProfilo').addEventListener('submit', function(event) {
             let formValido = true;
 

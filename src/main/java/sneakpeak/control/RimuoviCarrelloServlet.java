@@ -17,7 +17,7 @@ public class RimuoviCarrelloServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        // 1. Leggiamo l'ID del prodotto e la taglia da rimuovere dall'URL
+        //Leggiamo l'ID del prodotto e la taglia da rimuovere
         String idString = request.getParameter("id");
         String taglia = request.getParameter("taglia");
         
@@ -25,13 +25,13 @@ public class RimuoviCarrelloServlet extends HttpServlet {
             try {
                 int idProdotto = Integer.parseInt(idString);
                 
-                // 2. Recuperiamo la sessione attuale dell'utente
+                //Recuperiamo la sessione attuale dell'utente
                 HttpSession session = request.getSession();
                 
-                // 3. Estraiamo il carrello dalla sessione
+                //Estraiamo il carrello dalla sessione
                 Carrello carrello = (Carrello) session.getAttribute("carrello");
                 
-                // 4. Se il carrello esiste, rimuoviamo la scarpa tramite il suo ID e la taglia
+                //Se il carrello esiste, rimuoviamo la scarpa tramite il suo ID e la taglia
                 if (carrello != null) {
                     carrello.removeProdotto(idProdotto, taglia);
                     session.setAttribute("messaggioSuccesso", "Prodotto rimosso dal carrello.");
@@ -42,7 +42,7 @@ public class RimuoviCarrelloServlet extends HttpServlet {
             }
         }
         
-        // 5. Ricarichiamo la pagina del carrello in modo che l'utente veda la lista aggiornata
+        // Ricarichiamo la pagina del carrello in modo che l'utente veda la lista aggiornata
         response.sendRedirect("carrello.jsp");
     }
 

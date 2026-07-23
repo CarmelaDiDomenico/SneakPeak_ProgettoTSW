@@ -53,7 +53,7 @@ public class GestioneOrdiniServlet extends HttpServlet {
                 dataInizio = java.sql.Date.valueOf(dataInizioStr); // Formato YYYY-MM-DD
                 hasFilters = true;
             } catch (IllegalArgumentException e) {
-                // Ignore
+                
             }
         }
         
@@ -62,7 +62,7 @@ public class GestioneOrdiniServlet extends HttpServlet {
                 dataFine = java.sql.Date.valueOf(dataFineStr);
                 hasFilters = true;
             } catch (IllegalArgumentException e) {
-                // Ignore
+                
             }
         }
         

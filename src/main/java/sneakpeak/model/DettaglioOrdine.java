@@ -4,7 +4,7 @@ public class DettaglioOrdine {
     private int idOrdine;
     private int idProdotto;
     private String nomeProdotto;   // Recuperato via JOIN con PRODOTTO
-    private String taglia;         // <-- AGGIUNTO PER LE TAGLIE
+    private String taglia;         
     private int quantita;
     private double prezzoAcquisto;
     private double ivaAcquisto;

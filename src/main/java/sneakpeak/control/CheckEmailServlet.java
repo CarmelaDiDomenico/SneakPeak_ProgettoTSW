@@ -12,18 +12,18 @@ import sneakpeak.model.UtenteDAO;
 
 /**
  * Questa Servlet gestisce le richieste AJAX per verificare se un'email è già in uso.
- * Risponde in formato JSON: {"disponibile": true} o {"disponibile": false}.
+ * Risponde in formato JSON
  */
 @WebServlet("/checkEmail")
 public class CheckEmailServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. Impostiamo il tipo di risposta come JSON e la codifica UTF-8
+        //Impostiamo il tipo di risposta come JSON e la codifica UTF-8
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        // 2. Leggiamo l'email inviata tramite AJAX (es. /checkEmail?email=test@test.com)
+        //Leggiamo l'email inviata tramite AJAX
         String email = request.getParameter("email");
         boolean disponibile = true;
         
@@ -32,13 +32,13 @@ public class CheckEmailServlet extends HttpServlet {
             // Cerca se esiste già un utente con questa email
             Utente utente = utenteDAO.doRetrieveByEmail(email);
             
-            // Se l'utente esiste già, allora l'email NON è disponibile!
+            // Se l'utente esiste già, allora l'email non è disponibile!
             if (utente != null) {
                 disponibile = false;
             }
         }
         
-        // 3. Rispondiamo inviando un oggetto JSON come testo
+        //Rispondiamo inviando un oggetto JSON come testo
         response.getWriter().write("{\"disponibile\": " + disponibile + "}");
     }
 

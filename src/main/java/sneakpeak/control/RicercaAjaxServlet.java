@@ -20,7 +20,7 @@ public class RicercaAjaxServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("q");
         
-        // Impostiamo che la risposta sarà un file JSON, non una pagina HTML
+        // Impostiamo che la risposta sarà un file JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -42,7 +42,6 @@ public class RicercaAjaxServlet extends HttpServlet {
             Prodotto p = risultati.get(i);
             json.append("{");
             json.append("\"id\": ").append(p.getIdProdotto()).append(", ");
-            // Escapiamo eventuali virgolette nel nome per non rompere il JSON
             json.append("\"nome\": \"").append(p.getNome().replace("\"", "\\\"")).append("\", ");
             json.append("\"prezzo\": ").append(p.getPrezzo()).append(", ");
             json.append("\"immagine\": \"").append(p.getImmagine()).append("\"");

@@ -34,11 +34,10 @@ public class StoricoOrdiniServlet extends HttpServlet {
 
         OrdineDAO ordineDAO = new OrdineDAO();
 
-        // 1. Recupera tutti gli ordini dell'utente (già ordinati per data DESC)
+        //Recupera tutti gli ordini dell'utente
         List<Ordine> ordiniCliente = ordineDAO.doRetrieveByUtente(utente.getIdUtente());
 
-        // 2. Per ogni ordine, recupera i prodotti acquistati e costruisce una mappa
-        //    LinkedHashMap preserva l'ordine di inserimento (= data ordine DESC)
+        //Per ogni ordine, recupera i prodotti acquistati e costruisce una mappa
         Map<Integer, List<DettaglioOrdine>> dettagliPerOrdine = new LinkedHashMap<>();
         for (Ordine o : ordiniCliente) {
             List<DettaglioOrdine> dettagli = ordineDAO.doRetrieveDettagliByOrdine(o.getIdOrdine());

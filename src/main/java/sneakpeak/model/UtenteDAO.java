@@ -10,7 +10,7 @@ import sneakpeak.util.DBConnectionPool;
 public class UtenteDAO {
 
     /**
-     * 1. METODO PER LA REGISTRAZIONE
+     * METODO PER LA REGISTRAZIONE
      * Riceve in ingresso un oggetto Utente con i dati inseriti dall'utente
      * e inserisce i dati nella tabella UTENTE di MySQL.
      */
@@ -50,7 +50,7 @@ public class UtenteDAO {
     }
 
     /**
-     * 1.1 METODO PER IL CONTROLLO EMAIL
+     * METODO PER IL CONTROLLO EMAIL
      * Cerca nel database se esiste già un utente registrato con questa email.
      * Restituisce l'Utente se lo trova, altrimenti null.
      */
@@ -99,7 +99,7 @@ public class UtenteDAO {
 
 
     /**
-     * 2. METODO PER IL LOGIN
+     * METODO PER IL LOGIN
      * Cerca nel database se esiste un utente con quella specifica email e password.
      * Se lo trova, ci restituisce il Bean Utente pieno di dati, altrimenti null.
      */
@@ -151,7 +151,7 @@ public class UtenteDAO {
     }
 
     /**
-     * 3. METODO PER AGGIORNARE IL PROFILO
+     * METODO PER AGGIORNARE IL PROFILO
      * Riceve un Utente e aggiorna i suoi dati nel database usando il suo ID.
      */
     public boolean doUpdate(Utente utente) {
@@ -167,8 +167,6 @@ public class UtenteDAO {
             preparedStatement.setString(1, utente.getNome());
             preparedStatement.setString(2, utente.getCognome());
             
-            // La password deve arrivare a questo metodo GIA' CIFRATA, 
-            // oppure vuota se non si vuole cambiare.
             preparedStatement.setString(3, utente.getPassword()); 
             
             preparedStatement.setInt(4, utente.getIdUtente());

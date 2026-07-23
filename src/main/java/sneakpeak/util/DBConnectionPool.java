@@ -7,9 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Questa classe implementa un pool di connessioni elementare e thread-safe.
+ * Questa classe implementa un pool di connessioni elementare
  * Invece di distruggere le connessioni, le conserva in una lista per poterle riutilizzare,
- * ottimizzando drasticamente i tempi di risposta del server Tomcat.
  */
 public class DBConnectionPool {
 
@@ -22,7 +21,6 @@ public class DBConnectionPool {
     private static final String DB_PASSWORD = "";   
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    // Il blocco statico viene eseguito una sola volta quando la classe viene caricata in memoria
     static {
         freeDbConnections = new LinkedList<Connection>();
         try {
@@ -35,20 +33,17 @@ public class DBConnectionPool {
 
     /**
      * Fornisce una connessione prelevandola dal pool. Se il pool è vuoto, 
-     * ne genera una nuova di zecca.
-     * Il metodo è 'synchronized' per evitare conflitti quando più utenti effettuano richieste contemporanee.
+     * ne genera una nuova
      */
     public static synchronized Connection getConnection() throws SQLException {
         Connection connection;
 
-        // Se ci sono connessioni disponibili nel pool (la lista non è vuota)
+        // Se ci sono connessioni disponibili nel pool
         if (!freeDbConnections.isEmpty()) {
-            // Estrae la prima connessione disponibile (indice 0) e la rimuove dall'elenco delle connessioni libere
+            // Estrae la prima connessione disponibile e la rimuove dall'elenco delle connessioni libere
             connection = freeDbConnections.get(0);
             freeDbConnections.remove(0);
 
-            // Se la connessione recuperata per qualche motivo è stata chiusa dal server SQL, 
-            // chiama ricorsivamente il metodo per cercarne un'altra valida.
             if (connection.isClosed()) {
                 connection = getConnection();
             }
@@ -63,8 +58,6 @@ public class DBConnectionPool {
 
     /**
      * Rilascia una connessione precedentemente utilizzata. 
-     * Invece di richiamare il metodo .close() fisico, la rimette all'interno della lista 
-     * in modo che possa essere riciclata per la prossima operazione.
      */
     public static synchronized void releaseConnection(Connection connection) throws SQLException {
         if (connection != null) {

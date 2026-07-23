@@ -35,7 +35,7 @@
         <a href="adminDashboard.jsp" style="text-decoration: none; color: #337ab7; font-weight: bold;">🔙 Torna alla Dashboard</a>
     </div>
 
-    <!-- FORM FILTRI (Requisito della checklist) -->
+    <!-- FORM FILTRI  -->
     <div style="width: 95%; margin: 20px auto; background: #f9f9f9; padding: 15px; border: 1px solid #ddd; border-radius: 5px; text-align: center;">
         <form action="gestioneOrdini" method="GET" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
             <label><strong>Filtra per:</strong></label>

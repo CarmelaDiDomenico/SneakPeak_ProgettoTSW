@@ -71,7 +71,7 @@ public class GestioneTaglieServlet extends HttpServlet {
                     v.setTaglia(taglia.trim());
                     v.setQuantita(Integer.parseInt(qtyStr));
                     
-                    // Simple logic to add, ignoring unique constraint errors for now (could be handled gracefully)
+                    
                     vDao.doSave(v);
                 }
             } else if ("aggiorna".equals(azione)) {
