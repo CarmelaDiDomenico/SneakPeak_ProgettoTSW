@@ -1,0 +1,196 @@
+.container {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.section-title {
+    color: #2F4F4F;
+    border-bottom: 2px solid #39FF14;
+    padding-bottom: 5px;
+    margin-bottom: 25px;
+}
+
+/* --- CARD SINGOLO ORDINE --- */
+.ordine-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+.ordine-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2F4F4F;
+    color: white;
+    padding: 12px 20px;
+    cursor: pointer;
+    user-select: none;
+}
+.ordine-header:hover {
+    background-color: #3a6363;
+}
+.ordine-header .order-id {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.ordine-header .order-meta {
+    font-size: 0.9em;
+    opacity: 0.85;
+}
+.ordine-header .toggle-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+}
+.ordine-header.open .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Badge stato */
+.stato-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+}
+
+/* --- CORPO DELL'ORDINE (dettaglio prodotti) --- */
+.ordine-body {
+    display: none;
+    padding: 20px;
+}
+.ordine-body.open {
+    display: block;
+}
+
+/* Tabella prodotti acquistati */
+.tabella-prodotti {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+.tabella-prodotti th {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.85em;
+    border-bottom: 2px solid #ddd;
+}
+.tabella-prodotti td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9em;
+}
+.tabella-prodotti tr:last-child td {
+    border-bottom: none;
+}
+.tabella-prodotti td.num {
+    text-align: right;
+}
+
+/* Riepilogo totale nell'ordine */
+.ordine-summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    font-size: 0.9em;
+    color: #555;
+}
+.ordine-summary .totale-finale {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #2F4F4F;
+}
+
+/* Pulsante stampa */
+.btn-print {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 7px 14px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+.btn-print:hover {
+    background-color: #333;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 18px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+.back-btn:hover {
+    background-color: #555;
+}
+
+/* --- STILI PER LA STAMPA --- */
+@media print {
+    @page { margin: 0; } /* Rimuove header/footer del browser (Data, URL) */
+    body { 
+        background-color: white; 
+        color: black; 
+        margin: 0; 
+        padding: 0; 
+    }
+    .container { 
+        width: 100%; 
+        margin: 0; 
+        padding: 1.5cm !important; /* Diamo spazio ai bordi fisici del foglio */
+        box-sizing: border-box;
+        box-shadow: none; 
+        border-radius: 0; 
+    }
+    .back-btn, .btn-print, .nav, .header p, .footer, .toast-banner, .section-title { display: none !important; }
+    
+    /* Di default stampa tutto lo storico */
+    .ordine-card { display: block; break-inside: avoid; margin-bottom: 20px; border: 1px solid #aaa; }
+    
+    /* SE stiamo stampando un singolo ordine tramite JS, nascondi tutte le altre card */
+    body.print-single-mode .ordine-card:not(.print-active) { display: none !important; }
+    
+    /* Mostra TUTTE le card aperte in stampa (se non siamo in single-mode, apri tutto; se siamo in single-mode l'unica visibile sarà già aperta) */
+    .ordine-body { display: block !important; }
+    
+    .ordine-header { background-color: #eee !important; color: black !important; cursor: default; }
+    .toggle-icon { display: none; }
+    .tabella-prodotti th { background-color: #ddd; }
+    .tabella-prodotti th, .tabella-prodotti td { border: 1px solid #aaa !important; }
+    .stato-badge { border: 1px solid #aaa; color: black !important; background-color: transparent !important; }
+    
+    /* Intestazione fattura dinamica */
+    .container::before {
+        content: "Storico Acquisti — SneakPeak";
+        display: block;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+        border-bottom: 2px solid black;
+        padding-bottom: 10px;
+    }
+    body.print-single-mode .container::before {
+        content: "Ricevuta Ordine — SneakPeak";
+    }
+}

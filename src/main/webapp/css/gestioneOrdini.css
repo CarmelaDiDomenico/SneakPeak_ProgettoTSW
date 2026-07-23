@@ -1,0 +1,103 @@
+table { width: 95%; margin: 30px auto; border-collapse: collapse; text-align: center; }
+th, td { border: 1px solid #ddd; padding: 12px; }
+th { background-color: #333; color: white; }
+.btn-update { background-color: #5cb85c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+.badge-stato { padding: 5px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; color: white; }
+.btn-print { background-color: #333; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 10px; }
+
+/* =========================================
+   STILI PER AREA DI STAMPA FATTURE 
+   (Copiati da storicoOrdini.jsp per identicità)
+   ========================================= */
+#print-area { display: none; }
+
+.ordine-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    break-inside: avoid;
+}
+.ordine-header {
+    background-color: #f8f8f8;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+}
+.order-id { font-weight: bold; font-size: 1.1em; color: #337ab7; }
+.order-meta { color: #555; font-size: 0.9em; }
+.ordine-body { padding: 20px; display: block; }
+
+.tabella-prodotti {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+.tabella-prodotti th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid #ddd;
+    color: #666;
+    font-size: 0.9em;
+}
+.tabella-prodotti td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9em;
+}
+.tabella-prodotti tr:last-child td { border-bottom: none; }
+.tabella-prodotti td.num { text-align: right; }
+
+.ordine-summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    font-size: 0.9em;
+    color: #555;
+}
+.ordine-summary .totale-finale {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #2F4F4F;
+}
+
+@media print {
+    @page { margin: 0; }
+    body { margin: 0; padding: 0; background: white; color: black; }
+    .nav, .header p, footer, .toast-banner, form:not(.print-keep), .btn-update, .btn-print, .table-responsive { display: none !important; }
+    
+    body.print-single-mode > div:not(#print-area):not(.header) { display: none !important; }
+    body.print-single-mode #print-area { display: block !important; }
+    body.print-single-mode .ordine-card:not(.print-active) { display: none !important; }
+    
+    #print-area .container { 
+        width: 100%; margin: 0; padding: 1.5cm !important; 
+        box-sizing: border-box; box-shadow: none; border-radius: 0; 
+    }
+    
+    #print-area .container::before {
+        content: "Ricevuta Ordine — SneakPeak";
+        display: block;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+        border-bottom: 2px solid black;
+        padding-bottom: 10px;
+    }
+    
+    .ordine-card { border: 1px solid #aaa !important; margin-bottom: 20px; break-inside: avoid; }
+    .ordine-header { background-color: #eee !important; color: black !important; }
+    .tabella-prodotti th { background-color: #ddd; }
+    .tabella-prodotti th, .tabella-prodotti td { border: 1px solid #aaa !important; color: black !important; }
+    .stato-badge { border: 1px solid #aaa; color: black !important; background-color: transparent !important; }
+}

@@ -1,0 +1,49 @@
+.container {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: #2F4F4F;
+    margin-top: 25px;
+}
+
+p {
+    line-height: 1.6;
+    color: #555;
+    font-size: 16px;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    font-weight: bold;
+    color: #000;
+}
+
+.faq-answer {
+    color: #555;
+    margin-top: 5px;
+}
+
+.contact-box {
+    margin-top: 40px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    text-align: center;
+}

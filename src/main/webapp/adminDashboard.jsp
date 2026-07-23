@@ -12,27 +12,7 @@
     <meta charset="UTF-8">
     <title>Area Admin - SneakPeak</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .admin-menu { display: flex; gap: 20px; justify-content: center; margin-top: 40px; }
-        .admin-card { 
-            background: #f4f4f4; border: 1px solid #ccc; padding: 30px; 
-            border-radius: 8px; text-align: center; width: 250px; 
-            text-decoration: none; color: #333; font-weight: bold;
-            transition: 0.3s;
-        }
-        .admin-card:hover { background: #333; color: #fff; }
-
-        /* --- RESPONSIVE DESIGN --- */
-        @media screen and (max-width: 768px) {
-            .admin-menu {
-                flex-direction: column;
-                align-items: center;
-            }
-            .admin-card {
-                width: 90%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/adminDashboard.css">
 </head>
 <body>
 

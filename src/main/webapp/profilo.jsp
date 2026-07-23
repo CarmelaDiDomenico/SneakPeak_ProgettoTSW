@@ -16,81 +16,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Il tuo Profilo - SneakPeak</title>
-    <style>
-        .container {
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-            margin: 40px auto;
-            background-color: #f9f9f9;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .section-title {
-            color: #2F4F4F;
-            border-bottom: 2px solid #39FF14;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .container input[type="text"], .container input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .container input:focus {
-            border-color: #39FF14;
-            outline: none;
-            box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
-        }
-        button {
-            background-color: #39FF14;
-            color: black;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #2eb80f;
-            color: white;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
-            display: block;
-        }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        
-        .indirizzo-card {
-            background-color: white;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profilo.css">
 </head>
 <body>
 

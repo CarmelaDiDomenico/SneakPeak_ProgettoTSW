@@ -25,15 +25,7 @@
     <meta charset="UTF-8">
     <title>Modifica Prodotto - Admin</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Fix per evitare che input e textarea escano fuori dal contenitore a causa del padding */
-        input[type="text"], input[type="number"], input[type="file"], select, textarea {
-            box-sizing: border-box;
-        }
-        textarea {
-            resize: vertical; /* Impedisce di allargare la textarea orizzontalmente rompendo il design */
-        }
-    </style>
+    <link rel="stylesheet" href="css/modificaProdotto.css">
 </head>
 <body>
 

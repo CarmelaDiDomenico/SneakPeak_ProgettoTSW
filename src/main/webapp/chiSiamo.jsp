@@ -4,28 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Chi Siamo - SneakPeak</title>
-    <style>
-        .container {
-            width: 100%;
-            box-sizing: border-box;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #333;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
-        }
-        p {
-            line-height: 1.6;
-            color: #555;
-            font-size: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chiSiamo.css">
 </head>
 <body>
 

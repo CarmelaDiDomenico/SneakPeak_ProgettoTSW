@@ -1,0 +1,9 @@
+table { width: 90%; margin: 30px auto; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+th { background-color: #333; color: white; }
+.btn-update { background-color: #f0ad4e; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+.btn-delete { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+.btn-hard-delete { background-color: #000; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin-top: 5px; }
+.btn-activate { background-color: #5cb85c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+.badge-nascosto { background-color: #777; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
+.badge-attivo { background-color: #5cb85c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
