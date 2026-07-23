@@ -22,7 +22,7 @@
     <%@ include file="header.jsp" %>
 
     <h2 style="text-align:center; margin-top:30px;">
-        <%= request.getParameter("categoria") != null ? "Catalogo Categoria Selezionata" : "Nuovi Arrivi" %>
+        <%= request.getParameter("categoria") != null ? "Catalogo Categoria Selezionata" : "I nostri prodotti" %>
     </h2>
 
     <div class="filter-bar" style="text-align: center; margin: 20px auto; background-color: #f4f4f4; padding: 15px; border-radius: 8px; width: 90%; max-width: 1000px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
