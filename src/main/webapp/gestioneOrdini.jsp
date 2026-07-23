@@ -80,7 +80,7 @@
                 // Assegniamo un colore diverso al badge in base allo stato
                 String coloreBadge = "#f0ad4e"; // Giallo (In elaborazione)
                 if ("Spedito".equalsIgnoreCase(o.getStato())) coloreBadge = "#337ab7"; // Blu
-                if ("Consegnato".equalsIgnoreCase(o.getStato())) coloreBadge = "#5cb85c"; // Verde
+                if ("Consegnato".equalsIgnoreCase(o.getStato()) || "Completato".equalsIgnoreCase(o.getStato())) coloreBadge = "#5cb85c"; // Verde
                 if ("Annullato".equalsIgnoreCase(o.getStato())) coloreBadge = "#d9534f"; // Rosso
             %>
             <tr class="order-row" id="row-<%= o.getIdOrdine() %>">

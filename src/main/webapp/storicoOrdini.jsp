@@ -50,7 +50,7 @@
                     String colore = "#f0ad4e"; // giallo = In elaborazione
                     String stato = (o.getStato() != null) ? o.getStato() : "In elaborazione";
                     if ("Spedito".equalsIgnoreCase(stato))     colore = "#337ab7";
-                    if ("Consegnato".equalsIgnoreCase(stato))  colore = "#5cb85c";
+                    if ("Consegnato".equalsIgnoreCase(stato) || "Completato".equalsIgnoreCase(stato))  colore = "#5cb85c";
                     if ("Annullato".equalsIgnoreCase(stato))   colore = "#d9534f";
 
                     List<DettaglioOrdine> dettagli =
