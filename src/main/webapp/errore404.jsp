@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <link rel="icon" type="image/png" href="assets/logo.png">
     <meta charset="UTF-8">
     <title>Pagina Non Trovata - SneakPeak</title>
     <link rel="stylesheet" href="css/style.css">
@@ -18,3 +19,4 @@
     <jsp:include page="footer.jsp" />
 </body>
 </html>
+

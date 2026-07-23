@@ -5,7 +5,7 @@
         <div class="header">
             <a href="home" style="text-decoration: none; color: inherit; display: inline-block;">
                 <h1 style="display: flex; align-items: center; justify-content: center; gap: 5px;">
-                    <img src="img/logo.png" alt="Logo" style="height: 38px; mix-blend-mode: multiply; margin-right: 2px;">
+                    <img src="assets/logo.png" alt="Logo" style="height: 38px; mix-blend-mode: multiply; margin-right: 2px;">
                     SneakPeak
                 </h1>
             </a>

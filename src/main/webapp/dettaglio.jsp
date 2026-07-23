@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" type="image/png" href="assets/logo.png">
     <meta charset="UTF-8">
     <title>Dettaglio Prodotto - SneakPeak</title>
     
@@ -129,7 +130,7 @@
                                                 <%= (rIdx <= r.getValutazione()) ? "★" : "☆" %>
                                             <% } %>
                                         </span>
-                                        <span style="color: #888; font-size: 0.9em;"><%= r.getDataRecensione() %></span>
+                                        <span style="color: #888; font-size: 0.9em;"><%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(r.getDataRecensione()) %></span>
                                     </div>
                                     <h4 style="margin: 0 0 10px 0;"><%= r.getTitolo() %></h4>
                                     <p style="margin: 0 0 10px 0; color: #444;"><%= r.getDescrizione() %></p>

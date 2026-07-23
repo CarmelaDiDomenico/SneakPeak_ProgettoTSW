@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" type="image/png" href="assets/logo.png">
     <meta charset="UTF-8">
     <title>SneakPeak - Home</title>
     <link rel="stylesheet" href="css/style.css">
