@@ -31,7 +31,7 @@
 <body>
     <jsp:include page="header.jsp"/>
     <div class="container">
-        <a href="gestioneCatalogo" class="btn btn-back">← Torna al Catalogo</a>
+        <a href="gestioneCatalogo" style="text-decoration: none; color: #337ab7; font-weight: bold;">🔙 Torna al Catalogo</a>
         <h2>Gestione Taglie e Quantità</h2>
         <h3>Prodotto: <%= prodotto.getNome() %> (ID: <%= prodotto.getIdProdotto() %>)</h3>
         
