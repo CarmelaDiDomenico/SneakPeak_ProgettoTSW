@@ -21,8 +21,21 @@
 
     <%@ include file="header.jsp" %>
 
+    <%
+        String catParam = request.getParameter("categoria");
+        String titoloPagina = "I nostri prodotti";
+        if (catParam != null) {
+            switch(catParam) {
+                case "1": titoloPagina = "Catalogo Uomo"; break;
+                case "2": titoloPagina = "Catalogo Donna"; break;
+                case "3": titoloPagina = "Catalogo Bambino"; break;
+                case "4": titoloPagina = "Catalogo Unisex"; break;
+                default: titoloPagina = "Catalogo Categoria"; break;
+            }
+        }
+    %>
     <h2 style="text-align:center; margin-top:30px;">
-        <%= request.getParameter("categoria") != null ? "Catalogo Categoria Selezionata" : "I nostri prodotti" %>
+        <%= titoloPagina %>
     </h2>
 
     <div class="filter-bar" style="text-align: center; margin: 20px auto; background-color: #f4f4f4; padding: 15px; border-radius: 8px; width: 90%; max-width: 1000px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
