@@ -35,16 +35,8 @@
             </div>
 
             <div class="faq-item">
-                <div class="faq-question">3. Posso fare un reso o un cambio taglia?</div>
-                <div class="faq-answer">Certamente. Offriamo la possibilità di restituire il prodotto o cambiare la
-                    taglia entro 14 giorni dalla ricezione, purché le scarpe non siano state indossate e la scatola sia
-                    integra.</div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-question">4. Quali metodi di pagamento accettate?</div>
-                <div class="faq-answer">Attualmente accettiamo Carte di Credito/Debito, PayPal e bonifico bancario (su
-                    richiesta).</div>
+                <div class="faq-question">3. Quali metodi di pagamento accettate?</div>
+                <div class="faq-answer">Attualmente accettiamo Carte di Credito/Debito, PayPal e Google Pay.</div>
             </div>
 
             <div class="contact-box">

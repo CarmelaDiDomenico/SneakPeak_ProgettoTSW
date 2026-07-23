@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<div style="background-color: #2F4F4F; color: white; text-align: center; padding: 15px; margin-top: auto;">
-    <p>&copy; 2026 SneakPeak - Progetto d'Esame TSW | Salvatore Valente & Carmela Di Domenico</p>
+<div style="background-color: #2F4F4F; text-align: center; padding: 15px; margin-top: auto;">
+    <p style="color: white; margin: 0;">&copy; 2026 SneakPeak - Progetto d'Esame TSW | Salvatore Valente & Carmela Di Domenico</p>
 </div>
 
 <!-- MODAL CUSTOM GLOBALE PER LE CONFERME (Sostituisce window.confirm nativo del browser) -->
