@@ -20,9 +20,19 @@
                         <% sneakpeak.model.CategoriaDAO catDAO=new sneakpeak.model.CategoriaDAO();
                             java.util.List<sneakpeak.model.Categoria> categorie = catDAO.doRetrieveAll();
                             if(categorie != null) {
-                            for (sneakpeak.model.Categoria cat : categorie) {
+                                String currentMarca = request.getParameter("marca");
+                                String currentTaglia = request.getParameter("taglia");
+                                String currentOrd = request.getParameter("ordinamento");
+
+                                for (sneakpeak.model.Categoria cat : categorie) {
+                                    StringBuilder urlCat = new StringBuilder("home?categoria=" + cat.getIdCategoria());
+                                    try {
+                                        if (currentMarca != null && !currentMarca.isEmpty()) urlCat.append("&marca=").append(java.net.URLEncoder.encode(currentMarca, "UTF-8"));
+                                        if (currentTaglia != null && !currentTaglia.isEmpty()) urlCat.append("&taglia=").append(java.net.URLEncoder.encode(currentTaglia, "UTF-8"));
+                                        if (currentOrd != null && !currentOrd.isEmpty()) urlCat.append("&ordinamento=").append(java.net.URLEncoder.encode(currentOrd, "UTF-8"));
+                                    } catch (Exception e) {}
                             %>
-                            <a href="home?categoria=<%= cat.getIdCategoria() %>">
+                            <a href="<%= urlCat.toString() %>">
                                 <%= cat.getNome() %>
                             </a>
                             <% } } %>

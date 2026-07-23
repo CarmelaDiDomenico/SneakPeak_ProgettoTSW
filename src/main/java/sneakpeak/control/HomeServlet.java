@@ -70,7 +70,7 @@ public class HomeServlet extends HttpServlet {
         if (taglia != null && !taglia.isEmpty()) {
             catalogo = catalogo.stream()
                     .filter(p -> p.getVarianti().stream()
-                            .anyMatch(v -> v.getTaglia().equalsIgnoreCase(taglia) && v.getDisponibilita() > 0))
+                            .anyMatch(v -> v.getTaglia().equalsIgnoreCase(taglia) && v.getQuantita() > 0))
                     .collect(java.util.stream.Collectors.toList());
         }
         
